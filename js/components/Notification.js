@@ -21,7 +21,7 @@ import {
   Item as FormItem
 } from "native-base";
 
-class Profile extends Component {
+class Notification extends Component {
   render() {
     return (
       <Container style={styles.container}>
@@ -35,7 +35,7 @@ class Profile extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Profile</Title>
+            <Title>Notification</Title>
           </Body>
           <Right />
         </Header>
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBFAFA"
   },
 });
-export default Profile;
+export default Notification;

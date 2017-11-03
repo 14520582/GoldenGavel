@@ -24,9 +24,13 @@ import {
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
-const drawerCover = require("../assets/drawer-cover.png");
-const drawerImage = require("../assets/no-image.png");
-
+const drawerCover = require("../assets/newdracover.png");
+//const drawerImage = require("../assets/no-image.png");
+import firebase from 'react-native-firebase';
+import { connect } from 'react-redux'
+import { infoUserUpdate } from '../actions/infouser'
+import configureStore from '../config/configureStore'
+const {persistor} = configureStore()
 const datas = [
 	{
 		name: "Home",
@@ -41,21 +45,15 @@ const datas = [
 		bg: "#C5F442",
 	},
   {
+    name: "Notification",
+    route: "Notification",
+    icon: "md-notifications",
+    bg: "#C5F442",
+  },
+  {
 		name: "Profile",
 		route: "Profile",
 		icon: "contact",
-		bg: "#C5F442",
-	},
-	{
-		name: "Setting",
-		route: "Setting",
-		icon: "settings",
-		bg: "#C5F442",
-	},
-	{
-		name: "Logout",
-		route: "Login",
-		icon: "log-out",
 		bg: "#C5F442",
 	}
 ];
@@ -68,18 +66,32 @@ class SideBar extends Component {
 			shadowRadius: 4,
 		};
 	}
-
+  signOut() {
+     firebase.auth().signOut().then(() => {
+      persistor.purge()
+      this.props.navigation.navigate("Login")
+     }).catch((error) => {
+	   });
+  }
 	render() {
 		return (
 			<Container>
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
 					<Image source={drawerCover} style={styles.drawerCover}>
             <View style={styles.infoUser}>
-						      <Image style={styles.drawerImage} source={drawerImage} />
+						      <Image style={styles.drawerImage} source={{uri: this.props.infouser.photoURL}} />
                   <View style={{paddingLeft: 10}}>
-                    <Text style={{color: 'white', fontWeight: 'bold'}}>Tran Ngoc Nghia</Text>
-                    <Text style={{color: 'white'}}>tnnghia6482@gmail.com</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>{this.props.infouser.displayName}</Text>
+                    <Text style={{color: 'white'}}>{this.props.infouser.email}</Text>
                   </View>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={{borderRadius: 8,backgroundColor: '#9E9E9E'}}
+      					onPress={() => this.signOut()}
+      				>
+      					<Icon style={{color: 'white'}} name="log-out" />
+      				</Button>
             </View>
 					</Image>
 					<List
@@ -119,27 +131,19 @@ const styles = StyleSheet.create({
   },
   drawerCover: {
     alignSelf: "stretch",
-    // resizeMode: 'cover',
+    //resizeMode: 'contain',
     height: deviceHeight / 3.5,
     width: null,
     position: "relative",
-    marginBottom: 10
+    marginBottom: 10,
   },
   infoUser:{
     flexDirection: 'row',
     alignItems: 'center',
-    position: "absolute",
-    // left: (Platform.OS === 'android') ? 30 : 40,
-    left: Platform.OS === "android" ? deviceWidth / 14 : deviceWidth / 13,
-    // top: (Platform.OS === 'android') ? 45 : 55,
-    top: Platform.OS === "android" ? deviceHeight / 7 : deviceHeight / 6,
+    paddingTop: 30,
+    paddingLeft: 10,
   },
   drawerImage: {
-    //position: "absolute",
-    // left: (Platform.OS === 'android') ? 30 : 40,
-    //left: Platform.OS === "android" ? deviceWidth / 14 : deviceWidth / 13,
-    // top: (Platform.OS === 'android') ? 45 : 55,
-    //top: Platform.OS === "android" ? deviceHeight / 13 : deviceHeight / 12,
     width: 60,
     height: 60,
     resizeMode: "contain"
@@ -149,12 +153,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center"
   },
-  iconContainer: {
-    width: 37,
-    height: 37,
-    borderRadius: 18,
-    marginRight: 12,
-    paddingTop: Platform.OS === "android" ? 7 : 5
+  buttonContainer: {
+    width: 50,
+    height: 50,
+    position: "absolute",
+    left: 247,
+    top: Platform.OS === "android" ? deviceHeight / 5 : deviceHeight / 4,
   },
   sidebarIcon: {
     fontSize: 21,
@@ -175,4 +179,18 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "android" ? -3 : undefined
   }
 });
-export default SideBar;
+function mapStateToProps (state) {
+	return {
+		infouser: state.infouser,
+    firebase: state.fibase
+	}
+}
+function mapDispatchToProps (dispatch) {
+	return{
+		dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser))
+	}
+}
+export default connect(
+  mapStateToProps,
+	mapDispatchToProps,
+)(SideBar)

@@ -25,7 +25,7 @@ class MyStore extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Header>
+        <Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
           <Left>
             <Button
               transparent

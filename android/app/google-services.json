@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "684519341231",
+    "firebase_url": "https://goldengavel-5dca5.firebaseio.com",
+    "project_id": "goldengavel-5dca5",
+    "storage_bucket": "goldengavel-5dca5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684519341231:android:b4a9a8f670496137",
+        "android_client_info": {
+          "package_name": "com.goldengavel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684519341231-ltu6jir3jg06l976revth724v3t7a5lf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.goldengavel",
+            "certificate_hash": "4071e89ed67b4d83d46cc7f6b0f765fa86f46359"
+          }
+        },
+        {
+          "client_id": "684519341231-osatovs29sos4q9lpugf8ndbck3ugbfp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDewMWRFnO_WfglLILyb2k_5LigRFb5Yfk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684519341231-osatovs29sos4q9lpugf8ndbck3ugbfp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Platform, StyleSheet,View, } from "react-native";
 import {
   Container,
   Header,
@@ -23,8 +24,8 @@ export default class Product extends Component {
   }
   render() {
     return (
-      <Container>
-        <Header>
+      <Container style={styles.container}>
+        <Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon name="arrow-back" />
@@ -57,3 +58,8 @@ export default class Product extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+	container: {
+    backgroundColor: "#FBFAFA"
+  },
+});

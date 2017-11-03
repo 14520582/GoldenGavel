@@ -1,0 +1,4 @@
+const INFOUSER_UPDATE = 'INFOUSER_UPDATE'
+export {
+  INFOUSER_UPDATE,
+};
