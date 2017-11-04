@@ -23,6 +23,7 @@ import {
 } from "native-base";
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
+import ToAPI from '../server/ToAPI'
 import { infoUserUpdate } from '../actions/infouser'
 class Home extends Component {
   constructor(props) {
@@ -30,6 +31,10 @@ class Home extends Component {
     this.state = {};
   }
   componentWillMount(){
+      // ToAPI.getUserInfo(this.props.infouser.uid, (userinfo) => {
+      //   alert(JSON.stringify(userinfo))
+      // })
+      //ToAPI.pushProduct({name: 'SPA', initialBid: 350000, currentBid: 400000}, this.props.infouser.uid)
   }
   render() {
     return (

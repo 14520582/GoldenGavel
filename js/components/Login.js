@@ -7,6 +7,7 @@ import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import firebase from 'react-native-firebase'
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
+import ToAPI from '../server/ToAPI'
 const deviceHeight = Dimensions.get("window").height;
 const backGround = require("../assets/bg-login.jpg");
 const logo = require("../assets/goldengavel-logo.png");
@@ -18,9 +19,10 @@ const {persistor, store} = configureStore()
 // 	 databaseURL: "https://goldengavel-5dca5.firebaseio.com",
 // 	 projectId: "goldengavel-5dca5",
 // 	 storageBucket: "goldengavel-5dca5.appspot.com",
-// 	 messagingSenderId: "684519341231"
+// 	 messagingSenderId: "684519341231",
+// 	 persistence: true,
 // };
-// const firebaseApp = firebase.initializeApp(fireBaseconfig,'goldengavel');
+// firebase.initializeApp(fireBaseconfig,'app')
 class Login extends Component {
 	// eslint-disable-line
 	constructor(props) {
@@ -35,15 +37,6 @@ class Login extends Component {
 	componentWillMount(){
 
 	}
- // componentDidMount() {
- //  this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
- //
- //  });
- // }
- //
- // componentWillUnmount() {
- // 	if (this.unsubscribe) this.unsubscribe();
- // }
 	render() {
 		return (
 				<Image
@@ -102,7 +95,7 @@ class Login extends Component {
 		);
 	}
 	onLoginAccount(){
-
+		//ToAPI.setUserInfo('sd')
 	}
 	onLoginFacebook(){
 		this.setState ({
@@ -126,15 +119,24 @@ class Login extends Component {
 	    return firebase.auth().signInWithCredential(credential);
 	  })
 	  .then((currentUser) => {
-				this.props.dispatchInfoUserUpdate(currentUser)
-				//this.props.dispatchFirebaseIntialize(firebaseApp)
+				let userinfo ={
+					displayName: currentUser.displayName,
+					email: currentUser.email,
+					phoneNumber: "09877554333",
+					photoURL: currentUser.photoURL,
+					uid: currentUser.uid,
+					address: "",
+					facebook: "facebook.com/temp",
+					twitter: "twitter.com/temp",
+				}
+				ToAPI.setUserInfo(userinfo)
+				this.props.dispatchInfoUserUpdate(userinfo)
 				this.props.navigation.navigate('Home')
 	  })
 	  .catch((error) => {
 			this.setState ({
 					isLoading: false
 			})
-	    //alert(JSON.stringify(error));
 	  });
 	}
 }

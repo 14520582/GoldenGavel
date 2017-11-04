@@ -39,8 +39,11 @@ class MyStore extends Component {
           </Body>
           <Right />
         </Header>
-
         <Content>
+          <Button rounded
+            onPress={() => this.props.navigation.navigate('PushProduct')}>
+            <Text>Creat a auction</Text>
+          </Button>
         </Content>
       </Container>
     );
