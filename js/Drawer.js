@@ -3,7 +3,7 @@
 import React from "react";
 import { DrawerNavigator } from "react-navigation";
 
-import Home from "./components/Home";
+import Home from "./components/Home/";
 import Setting from "./components/Setting";
 import Login from "./components/Login";
 import MyStore from "./components/MyStore";

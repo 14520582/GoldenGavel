@@ -64,6 +64,7 @@ class SideBar extends Component {
 		this.state = {
 			shadowOffsetWidth: 1,
 			shadowRadius: 4,
+      visiable: true,
 		};
 	}
   signOut() {
@@ -75,7 +76,7 @@ class SideBar extends Component {
   }
 	render() {
 		return (
-			<Container>
+      <Container>
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
 					<Image source={drawerCover} style={styles.drawerCover}>
             <View style={styles.infoUser}>
@@ -97,7 +98,8 @@ class SideBar extends Component {
 					<List
 						dataArray={datas}
 						renderRow={data =>
-							<ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
+							<ListItem button noBorder onPress={() => {
+                this.props.navigation.navigate(data.route,{user: 'f'})}}>
 								<Left>
 									<Icon active name={data.icon} style={{ color: "#777", fontSize: 26, width: 30 }} />
 									<Text style={styles.text}>

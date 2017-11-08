@@ -20,7 +20,8 @@ import {
   H3,
   Item as FormItem
 } from "native-base";
-
+import ToAPI from '../server/ToAPI'
+import { connect } from 'react-redux'
 class MyStore extends Component {
   render() {
     return (
@@ -41,7 +42,19 @@ class MyStore extends Component {
         </Header>
         <Content>
           <Button rounded
-            onPress={() => this.props.navigation.navigate('PushProduct')}>
+            onPress={() => {
+              // let product = {
+              //   name: '',
+              //   description: '',
+              //   payment: '',
+              //   endtime: '',
+              //   starttime: '',
+              //   image: ['1','2','3','4'],
+              //   startingbid: 909483,
+              //   bidincrement: 10000,
+              // }
+              // ToAPI.pushProduct(product,this.props.infouser.uid)
+            }}>
             <Text>Creat a auction</Text>
           </Button>
         </Content>
@@ -54,4 +67,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBFAFA"
   },
 });
-export default MyStore;
+function mapStateToProps (state) {
+	return {
+		infouser: state.infouser
+	}
+}
+export default connect(
+  mapStateToProps,
+)(MyStore)
