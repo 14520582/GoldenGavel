@@ -9,7 +9,7 @@ module.exports = StyleSheet.create({
   },
 	name : {
 		paddingLeft: 5,
-		fontSize: 16,
+		fontSize: 18,
 		color: 'black',
 		fontWeight: 'bold'
 	},
@@ -49,7 +49,7 @@ module.exports = StyleSheet.create({
 		paddingRight: 5,
   },
 	containerByCategory: {
-		height: deviceWidth/2 + 45,
+		height: deviceWidth/2 + 50,
 		width: deviceWidth/2,
 		borderWidth: 0.5,
 		borderColor:'#CFD8DC'
@@ -65,11 +65,11 @@ module.exports = StyleSheet.create({
     borderColor: '#CFD8DC',
     height: 100,
     width: 100,
-    borderWidth: 1
+    borderRightWidth: 1
   },
   viewmore: {
     fontWeight: 'bold',
-    color: '#FF8F00'
+    color: '#FF6F00'
   },
   nameproduct1: {
     fontWeight: 'bold',
@@ -83,7 +83,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   titleCategories: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 	containerCategory : {
 		backgroundColor: 'rgba(0,0,0,0.2)',
@@ -96,10 +96,17 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+	divideLine :{
+		backgroundColor: '#E0E0E0',
+		height: 12,
+	},
   headerCategories: {
     padding: 15,
-    backgroundColor: '#EEEEEE',
+  	backgroundColor: '#F5F5F5',
     flexDirection: 'row',
+		borderColor: '#CFD8DC',
+		borderTopWidth: 1,
+		borderBottomWidth: 1,
     justifyContent: 'space-between'
   },
 	statusHeader : {

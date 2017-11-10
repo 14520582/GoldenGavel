@@ -31,6 +31,39 @@ class ToAPI {
       callback(items.reverse())
     })
   }
+  static get4ItemByCategory(category,callback){
+    firebase.database().ref('Product').orderByChild("category").equalTo(category).limitToLast(4).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static getNewItem (limit,callback) {
+    firebase.database().ref('Product').limitToLast(limit).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static getHotItem (limit,callback) {
+    firebase.database().ref('Product').limitToFirst(limit).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
   static pushProduct(productinfo, uid){
     productinfo['owner'] = uid
     firebase.database().ref().child('Product').push(productinfo)

@@ -43,17 +43,22 @@ class MyStore extends Component {
         <Content>
           <Button rounded
             onPress={() => {
-              // let product = {
-              //   name: '',
-              //   description: '',
-              //   payment: '',
-              //   endtime: '',
-              //   starttime: '',
-              //   image: ['1','2','3','4'],
-              //   startingbid: 909483,
-              //   bidincrement: 10000,
-              // }
-              // ToAPI.pushProduct(product,this.props.infouser.uid)
+              var start = new Date();
+              let rd = Math.floor(Math.random() * 9) + 1
+              let product = {
+                name: 'N'+ Math.random()*1000/10,
+                description: 'description',
+                currentbid: rd*300000,
+                payment: 'payment',
+                category: '',
+                endtime: start.getTime() + 86400000*rd,
+                starttime: start.getTime(),
+                image: ['https://firebasestorage.googleapis.com/v0/b/goldengavel-5dca5.appspot.com/o/fashion4.jpg?alt=media&token=f840342a-2d5b-4284-93b3-461dd9f39163','2','3','4'],
+                numberofbid: rd,
+                startingbid: rd*100000,
+                bidincrement: rd*10000,
+              }
+              ToAPI.pushProduct(product,this.props.infouser.uid)
             }}>
             <Text>Creat a auction</Text>
           </Button>

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Image, TouchableOpacity,Dimensions, FlatList } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity,Dimensions, FlatList,ActivityIndicator } from "react-native";
 
 import {
   Container,
@@ -22,11 +22,22 @@ import styles from './styles'
 import ResponsiveImage from 'react-native-responsive-image';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const img1 = 'https://images.freecreatives.com/wp-content/uploads/2016/09/Multipurpose-Travel-Banner.jpg'
+import LinearGradient from 'react-native-linear-gradient';
+import ToAPI from '../../server/ToAPI'
+const gradient = ['#FFA000','#FFCA28','#FFD54F','#FFE082']
 export default class Category extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      data: null
+    };
+  }
+  componentDidMount(){
+    ToAPI.get4ItemByCategory(this.props.category,(data) =>{
+      this.setState({
+        data: data
+      })
+    })
   }
   render() {
     return (
@@ -39,17 +50,26 @@ export default class Category extends Component {
             <Text style={styles.viewmore}>VIEW MORE</Text>
           </TouchableOpacity>
         </View>
-        <View>
+        {
+        this.state.data && <View>
           <FlatList
-            data={this.props.data}
+            data={this.state.data}
             contentContainerStyle={styles.containerCategories}
             extraData= {this.state}
             removeClippedSubviews={true}
             numColumns={2}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.title}
+            keyExtractor={(item) => item.name}
             renderItem={this._renderByCategory}
           />
+        </View>
+        }
+        {
+          !this.state.data && <View style={styles.loadingCategory}>
+            <ActivityIndicator/>
+          </View>
+        }
+        <View style={styles.divideLine}>
         </View>
       </View>
     );
@@ -58,13 +78,13 @@ export default class Category extends Component {
     <View removeClippedSubviews={true} style={styles.containerByCategory}>
       {
         <View style={{height: deviceWidth/2, width: deviceWidth/2}}>
-          <ResponsiveImage style={{alignSelf: 'center'}} initWidth={deviceWidth/2} initHeight={deviceWidth/2} source={{uri: img1}}>
+          <ResponsiveImage style={{alignSelf: 'center'}} initWidth={deviceWidth/2} initHeight={deviceWidth/2} source={{uri: item.image[0]}}>
           </ResponsiveImage>
           <View style={[styles.rowinfobid, styles.statusHeader, {position: 'absolute',width: deviceWidth/2}]}>
             <Text>2 days 3 hrs</Text>
             <View style={styles.row}>
-              <Icon name='md-arrow-dropup' style={styles.colortext}/>
-              <Text style={styles.colortext}>124</Text>
+              <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
+              <Text style={styles.colortext}>{item.numberofbid}</Text>
             </View>
           </View>
         </View>
