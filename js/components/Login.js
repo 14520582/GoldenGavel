@@ -13,16 +13,16 @@ const backGround = require("../assets/bg-login.jpg");
 const logo = require("../assets/goldengavel-logo.png");
 import configureStore from '../config/configureStore'
 const {persistor, store} = configureStore()
-// let fireBaseconfig = {
-// 	 apiKey: "AIzaSyDHGf9OI9x1GexWtCDgZqNcsIYy4U0t0nc",
-// 	 authDomain: "goldengavel-5dca5.firebaseapp.com",
-// 	 databaseURL: "https://goldengavel-5dca5.firebaseio.com",
-// 	 projectId: "goldengavel-5dca5",
-// 	 storageBucket: "goldengavel-5dca5.appspot.com",
-// 	 messagingSenderId: "684519341231",
-// 	 persistence: true,
-// };
-// firebase.initializeApp(fireBaseconfig,'app')
+/* let fireBaseconfig = {
+	 apiKey: "AIzaSyDHGf9OI9x1GexWtCDgZqNcsIYy4U0t0nc",
+ 	 authDomain: "goldengavel-5dca5.firebaseapp.com",
+ 	 databaseURL: "https://goldengavel-5dca5.firebaseio.com",
+ 	 projectId: "goldengavel-5dca5",
+ 	 storageBucket: "goldengavel-5dca5.appspot.com",
+ 	 messagingSenderId: "684519341231",
+ 	 persistence: true,
+ };
+firebase.initializeApp(fireBaseconfig,'app') */
 class Login extends Component {
 	// eslint-disable-line
 	constructor(props) {
