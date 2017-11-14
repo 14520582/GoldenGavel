@@ -35,7 +35,7 @@ const AppNavigator = StackNavigator(
         Login: {screen: Login}
     },
     {
-        initialRouteName: "Login",
+        initialRouteName: "SplashScreen",
         headerMode: "none",
     }
 );
