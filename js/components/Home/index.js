@@ -106,7 +106,7 @@ class Home extends Component {
               <TouchableOpacity
                onPress = { () => this.props.navigation.navigate('Home')}
               >
-                <Text style={styles.viewmore}>VIEW MORE</Text>
+                <Text style={styles.viewmore}>SEE ALL</Text>
               </TouchableOpacity>
             </View>//'#FFCA28','#FFD54F','#FFE082','#FFECB3'
             }

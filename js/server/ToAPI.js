@@ -6,7 +6,7 @@ class ToAPI {
     firebase.database().ref().child(`User/${userinfo.uid}`).set(userinfo)
   }
   static getUserInfo(uid, callback){
-    firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo)})
+    firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo.val())})
   }
   static getBanner(callback){
     firebase.database().ref('Banner').once('value', (snap) => {
@@ -41,6 +41,9 @@ class ToAPI {
       });
       callback(items.reverse())
     })
+  }
+  static getItem (id,callback) {
+    firebase.database().ref(`Product/${id}`).on('value', (item) => {callback(item.val())})
   }
   static getNewItem (limit,callback) {
     firebase.database().ref('Product').limitToLast(limit).on('value', (snap) => {

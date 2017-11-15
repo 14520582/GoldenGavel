@@ -39,7 +39,7 @@ const datas = [
 		bg: "#C5F442",
 	},
   {
-		name: "My business",
+		name: "My Store",
 		route: "MyStore",
 		icon: "cart",
 		bg: "#C5F442",

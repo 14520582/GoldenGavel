@@ -18,6 +18,7 @@ var DESTRUCTIVE_INDEX = 3;
 var CANCEL_INDEX = 4;
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
+import ToAPI from '../server/ToAPI'
 
 export default class Product extends Component {
   constructor(props) {
@@ -33,8 +34,12 @@ export default class Product extends Component {
 		modalVisible: false,
 		isFirstProduce: true,
 		isLastProduce: false,
-		
-	};
+	 };
+  }
+  componentWillMount(){
+    ToAPI.getItem('-KyWKPsOwPOsRkJzy1_F',(item) =>{
+      alert(JSON.stringify(item))
+    })
   }
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
@@ -100,7 +105,7 @@ export default class Product extends Component {
 			<Text style={{fontSize:18,color: '#212121',paddingBottom:deviceHeight/30, paddingTop:10,fontWeight:'bold'}}>{'About the Wine'}</Text>
 			<View style = {{flex: 2,flexDirection: 'row',justifyContent: 'space-around',alignItems: 'center',marginBottom:deviceHeight/30}}>
 				<View style = {{flex: 2,flexDirection: 'row',justifyContent: 'flex-start',alignItems: 'center',marginLeft: 20}}>
-					<Button 
+					<Button
 						onPress={() =>
 						ActionSheet.show(
 						{
@@ -121,7 +126,7 @@ export default class Product extends Component {
 				</View>
 				<View style = {{flex: 2,flexDirection: 'row',justifyContent: 'flex-end',alignItems: 'center', marginRight: 20}}>
 					<Text style = {{paddingRight:10}}>{'Next'}</Text>
-					<Button 
+					<Button
 						onPress={() =>
 						ActionSheet.show(
 						{
@@ -140,9 +145,9 @@ export default class Product extends Component {
 					</Button>
 				</View>
 			</View>
- 
+
         </Content>
-		
+
 		<Modal
 			animationType="slide"
 			transparent={true}
@@ -184,7 +189,7 @@ export default class Product extends Component {
 			</View>
 		</Modal>
       </Container>
-	  
+
     );
   }
 }
