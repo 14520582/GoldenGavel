@@ -13,6 +13,7 @@ import {
   Body,
   Left,
   Tab,
+  Fab,
   Tabs,
   TabHeading,
   List,
@@ -52,7 +53,14 @@ class MyStore extends Component {
           <Body>
             <Title>My Store</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate("PushProduct")}
+            >
+              <Icon style={{fontSize: 35}} name="md-cloud-upload" />
+            </Button>
+          </Right>
         </Header>
         <Tabs initialPage={0} onChangeTab={this._onChangeTab}>
           <Tab heading = {

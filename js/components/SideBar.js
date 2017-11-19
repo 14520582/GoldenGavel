@@ -17,6 +17,7 @@ import {
 	Right,
 	Badge,
 	Button,
+  Thumbnail,
 	StyleProvider,
 	getTheme,
 	variables,
@@ -80,7 +81,7 @@ class SideBar extends Component {
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
 					<Image source={drawerCover} style={styles.drawerCover}>
             <View style={styles.infoUser}>
-						      <Image style={styles.drawerImage} source={{uri: this.props.infouser.photoURL}} />
+						      <Thumbnail source={{uri: this.props.infouser.photoURL}} />
                   <View style={{paddingLeft: 10}}>
                     <Text style={{color: 'white', fontWeight: 'bold'}}>{this.props.infouser.displayName}</Text>
                     <Text style={{color: 'white'}}>{this.props.infouser.email}</Text>
