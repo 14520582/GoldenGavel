@@ -25,51 +25,74 @@ const visa = require('../assets/visa.png')
 const mastercard = require('../assets/mastercard.png')
 const shipping = require('../assets/shipping.png')
 const cod = require('../assets/cod.png')
+import Currency from '../util/Currency'
 const isCOD = null
 class BriefProduct extends Component {
+  constructor(props) {
+    super(props);
+    this.gatepayment = {
+      "PayPal" : paypal,
+      "MasterCard" : mastercard,
+      "Visa" : visa
+    }
+    this.state = {
+    };
+  }
+  componentWillMount () {
+    //alert(this.gatepayment["MasterCard"])
+  }
   render() {
     return (
       <View>
         <View style={styles.container}>
           <View style={styles.imageContainer}>
-            <Image style={styles.image} source={{ uri: img }}/>
+            <Image style={styles.image} source={{ uri: this.props.item.image[0] }}/>
           </View>
           <View style={styles.infoContainer}>
-            <Text numberOfLines={2} style={styles.nameProduct}>Rolex Cosmograph Daytona Ice Blue Dial Platinum Mens Watch 116506IBLSO</Text>
+            <Text numberOfLines={1} style={[styles.nameProduct, {fontSize: 18}]}>{this.props.item.name}</Text>
             {
-              !isCOD && <View style={styles.row}>
-                 <Image style={styles.paymentIcon} source={mastercard}/>
-                 <View style={styles.paymentIconContainer}>
-                  <Image style={styles.paymentIcon} source={paypal}/>
-                 </View>
-                 <View style={styles.paymentIconContainer}>
-                  <Image style={styles.paymentIcon} source={visa}/>
-                 </View>
-                 <View style={styles.paymentIconContainer}>
-                  <Image style={styles.paymentIcon} source={shipping}/>
-                 </View>
+              Array.isArray(this.props.item.payment) && <View style={styles.row}>
+                 {
+                   this.props.item.payment.map((item, index) => {
+                     return (
+                       <View key={index} style={index == 0 ? {} : styles.paymentIconContainer}>
+                        <Image style={styles.paymentIcon} source={this.gatepayment[item]}/>
+                       </View>
+                     )
+                   })
+                 }
+                 {
+                   this.props.item.shipping === 'Free' && <View style={styles.paymentIconContainer}>
+                    <Image style={styles.paymentIcon} source={shipping}/>
+                   </View>
+                 }
               </View>
             }
             {
-              isCOD && <Image style={styles.paymentCOD} source={cod}/>
+              this.props.item.payment === 'COD' && <Image style={styles.paymentCOD} source={cod}/>
+            }
+            {
+              this.props.item.payment === 'Unknown' && <View>
+                 <Text>Payment method unknown</Text>
+              </View>
             }
             <View style={styles.details}>
               <View>
                 <View style={styles.row}>
                   <Icon name ='md-arrow-dropup' style={styles.arrowup}/>
-                  <Text style={styles.numbids}>121</Text>
+                  <Text style={styles.numbids}>{this.props.item.numberofbid}</Text>
                 </View>
                 <Text style={styles.redText}>3h 20m</Text>
                 <View style={styles.row}>
-                  <Text style={styles.nameProduct}>Like new</Text>
+                  <Text style={styles.nameProduct}>{this.props.item.condition}</Text>
                 </View>
               </View>
               <View  style={styles.priceContainer}>
-                <Text style={styles.redText}>2,000,000 VNĐ</Text>
-                <Text>500,000 VNĐ</Text>
+                <Text style={styles.redText}>{Currency.convertNumberToCurrency(this.props.item.currentbid) + ' VNĐ'}</Text>
+                <Text>{Currency.convertNumberToCurrency(this.props.item.startingbid) + ' VNĐ'}</Text>
                 <View style={styles.row}>
                   <Icon name ='md-add-circle' style={styles.addcircle}/>
-                  <Text style={styles.increment}>50,000 VNĐ</Text>
+                  <Text style={styles.increment}>{Currency.convertNumberToCurrency(this.props.item.bidincrement) + ' VNĐ'}</Text>
                 </View>
               </View>
             </View>
@@ -124,7 +147,7 @@ const styles = StyleSheet.create({
   },
   paymentCOD: {
     resizeMode: 'stretch',
-    height: 35,
+    height: 30,
     width: 89
   },
   nameProduct: {
@@ -141,6 +164,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1.8,
+    paddingLeft: 10,
     justifyContent: 'space-between',
   },
   rightContainer: {

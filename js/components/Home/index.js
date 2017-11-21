@@ -57,6 +57,7 @@ class Home extends Component {
       })
     })
     ToAPI.getNewItem(8,(newitem) =>{
+      //alert(JSON.stringify(newitem[0]))
       this.setState({
         newitem: newitem
       })

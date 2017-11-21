@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import { Image, View, StatusBar, Text,StyleSheet, Dimensions, ScrollView, TouchableOpacity } from "react-native";
+import { Image, View, StatusBar, Text,StyleSheet, Dimensions, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import { Container, Button, H3, Header, Content, Title,Form, Body, Left, Fab, Right,Radio, ListItem, Input,Item, Icon, Label,Picker } from "native-base";
 import DatePicker from 'react-native-datepicker'
+import moment from 'moment'
 const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 const addimage = require('../assets/add-camera.png')
 import ToAPI from '../server/ToAPI'
+import DateTime from '../util/DateTime'
+import Currency from '../util/Currency'
 const paypal = require('../assets/paypal.png')
 const visa = require('../assets/visa.png')
 const mastercard = require('../assets/mastercard.png')
@@ -30,22 +34,51 @@ class PushProduct extends Component {
 			category: 0,
 			height: 100,
 			name: '',
+      uploading: false,
 			description: '',
-			endtime:	new Date(),
-			startingbid: "",
-			bidincrement: "",
+			endtime:moment().add(1, 'days').format('DD-MM-YYYY hh:mm'),
+			startingbid: '',
+			bidincrement: '',
 			mastercard: true,
 			paypal: false,
+      condition: 'Unknown',
 			shipping: "Unknown",
 			visa: false,
 			categories: null,
 		};
 	}
+  initialData(){
+    this.setState({
+      image1: null,
+			image2: null,
+			image3: null,
+			image4: null,
+			payment: 'Transfer',
+			category: 0,
+			height: 100,
+			name: '',
+      uploading: false,
+			description: '',
+			endtime:	moment().add(1, 'days').format('DD-MM-YYYY hh:mm'),
+			startingbid: '',
+			bidincrement: '',
+			mastercard: true,
+			paypal: false,
+      condition: 'Unknown',
+			shipping: "Unknown",
+			visa: false,
+    })
+  }
 	onValueChange2(value: string) {
 	 this.setState({
 		 category: value
 	 });
  	}
+  onValueChange3(value: string) {
+   this.setState({
+     condition: value
+   });
+  }
 	onValueChange1(value: string) {
 	 this.setState({
 		 shipping: value
@@ -56,7 +89,51 @@ class PushProduct extends Component {
 		 payment: value
 	 });
  	}
-  pushProduct() {
+  async pushProduct() {
+    let mess = this.checkValid()
+    if(mess)
+    {
+        this.setState({uploading: false})
+        alert(mess)
+        return
+    }
+    let images = []
+    let a = await ToAPI.upLoadPhoto(this.state.image1.path, this.state.categories[this.state.category].category, this.state.name, 1)
+    .catch(err => {
+        this.setState({uploading: false})
+        alert(err)
+    });
+    images.push(a.downloadURL)
+    if(this.state.image2 != null){
+      a = await ToAPI.upLoadPhoto(this.state.image2.path, this.state.categories[this.state.category].category, this.state.name, 2)
+      .catch(err => {
+          this.setState({uploading: false})
+          alert(err)
+      });
+      images.push(a.downloadURL)
+    }
+    else
+      images.push('')
+    if(this.state.image3 != null){
+      a = await ToAPI.upLoadPhoto(this.state.image3.path, this.state.categories[this.state.category].category, this.state.name, 3)
+      .catch(err => {
+          this.setState({uploading: false})
+          alert(err)
+      });
+      images.push(a.downloadURL)
+    }
+    else
+      images.push('')
+    if(this.state.image4 != null){
+      a = await ToAPI.upLoadPhoto(this.state.image4.path, this.state.categories[this.state.category].category, this.state.name, 4)
+      .catch(err => {
+          this.setState({uploading: false})
+          alert(err)
+      });
+      images.push(a.downloadURL)
+    }
+    else
+      images.push('')
     let payment=[];
     if(this.state.payment == 'Transfer') {
       if(this.state.mastercard)
@@ -66,21 +143,31 @@ class PushProduct extends Component {
       if(this.state.mastercard)
         payment.push('Visa')
     }
+    let starttime = new Date()
     let product = {
       name: this.state.name,
-      startingbid: this.state.startingbid,
-      bidincrement: this.state.bidincrement,
-      endtime: this.state.endtime,
-      startingtime: new Date(),
+      startingbid: Number(this.state.startingbid.replace(',', "")),
+      bidincrement: Number(this.state.bidincrement.replace(',', "")),
+      condition: this.state.condition,
+      endtime: DateTime.convertStringToNumber(this.state.endtime),
+      starttime: starttime.getTime(),
       payment: this.state.payment == 'Transfer' ? payment : this.state.payment,
       description: this.state.description,
-      category: this.state.categories[this.state.category],
-      image: [image1,image2,image3,image4],
+      category: this.state.categories[this.state.category].category,
+      image: images,
       shipping: this.state.shipping
     }
     ToAPI.pushProduct(product,this.props.infouser.uid)
+    alert('Upload Successfully')
+    //this.setState({uploading: false})
+    this.initialData()
   }
   checkValid(){
+    if(this.state.name === '' || this.state.bidincrement === '' || this.state.startingbid === '')
+      return 'Please fill in all the required fields'
+    if(!this.state.image1)
+      return 'The first image is not allowed to be null'
+    return null
   }
 	getPhoto(index) {
 		ImagePicker.showImagePicker(options, (response) => {
@@ -96,25 +183,26 @@ class PushProduct extends Component {
 	    console.log('User tapped custom button: ', response.customButton);
 	  }
 	  else {
+      //alert(JSON.stringify(response))
 			switch (index) {
 				case 1:
 					this.setState({
-						image1: response.uri
+						image1: response
 					});
 				break;
 				case 2:
 					this.setState({
-						image2: response.uri
+						image2: response
 					});
 				break;
 				case 3:
 					this.setState({
-						image3: response.uri
+						image3: response
 					});
 				break;
 				case 4:
 					this.setState({
-						image4: response.uri
+						image4: response
 					});
 				break;
 				default:
@@ -123,6 +211,8 @@ class PushProduct extends Component {
 		});
 	}
 	componentWillMount() {
+     // let a = Number('300000000')
+     // alert(a)
 		 ToAPI.getCategories((categories) =>{
 			this.setState({
 				categories: categories
@@ -130,7 +220,7 @@ class PushProduct extends Component {
 		})
 	}
 	changeToCurrency(money) {
-		let value = money.toString()
+		let value = money
 		if (value != "") {
       value = value.replace(/\D/g, "");
       value = value.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1" + ',');
@@ -164,7 +254,7 @@ class PushProduct extends Component {
   }
 	render() {
 		return (
-			<Container style={styles.container}>
+			<Container pointerEvents={this.state.uploading ? 'none' : 'auto'} style={styles.container}>
         <Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
           <Left>
             <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -175,15 +265,18 @@ class PushProduct extends Component {
             <Title>Push an item</Title>
           </Body>
           <Right>
-						<Button transparent onPress={() => this.props.navigation.goBack()}>
+						<Button transparent onPress={() => {
+              this.setState({uploading: true})
+              this.pushProduct()
+              }}>
 							<Icon style={{fontSize: 25}}name="md-paper-plane" />
 						</Button>
 					</Right>
         </Header>
-        <Content padder>
+        <Content padder keyboardShouldPersistTaps='always'>
 					<View style={styles.containerRowImage}>
 						<TouchableOpacity onPress={() => this.getPhoto(1)}>
-							<Image source ={this.state.image1 ? {uri: this.state.image1} : addimage} style={styles.containerImage}>
+							<Image source ={this.state.image1 ? {uri: this.state.image1.uri} : addimage} style={styles.containerImage}>
                 {
                   this.state.image1 && <Button transparent onPress={() => this.removeImage(1)}>
       							<Icon style={styles.removeIcon} name="md-close" />
@@ -192,7 +285,7 @@ class PushProduct extends Component {
               </Image>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={() => this.getPhoto(2)}>
-							<Image source ={this.state.image2 ? {uri: this.state.image2} : addimage} style={styles.containerImage}>
+							<Image source ={this.state.image2 ? {uri: this.state.image2.uri} : addimage} style={styles.containerImage}>
               {
                 this.state.image2 && <Button transparent onPress={() => this.removeImage(2)}>
                   <Icon style={styles.removeIcon} name="md-close" />
@@ -201,7 +294,7 @@ class PushProduct extends Component {
               </Image>
             </TouchableOpacity>
 						<TouchableOpacity onPress={() => this.getPhoto(3)}>
-							<Image source ={this.state.image3 ? {uri: this.state.image3} : addimage} style={styles.containerImage}>
+							<Image source ={this.state.image3 ? {uri: this.state.image3.uri} : addimage} style={styles.containerImage}>
               {
                 this.state.image3 && <Button transparent onPress={() => this.removeImage(3)}>
                   <Icon style={styles.removeIcon} name="md-close" />
@@ -210,7 +303,7 @@ class PushProduct extends Component {
               </Image>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={() => this.getPhoto(4)}>
-							<Image source ={this.state.image4 ? {uri: this.state.image4} : addimage} style={styles.containerImage}>
+							<Image source ={this.state.image4 ? {uri: this.state.image4.uri} : addimage} style={styles.containerImage}>
               {
                 this.state.image4 && <Button transparent onPress={() => this.removeImage(4)}>
                   <Icon style={styles.removeIcon} name="md-close" />
@@ -224,6 +317,9 @@ class PushProduct extends Component {
 							style={{fontWeight:'bold', fontSize: 18}}
 							placeholder='Product Name'
 							value={this.state.name}
+              onChangeText={(text) => {
+                this.setState({name: text})
+              }}
 						/>
           </Item>
 					<View style={[styles.row, {justifyContent: 'space-between'}]}>
@@ -231,7 +327,7 @@ class PushProduct extends Component {
 						<View style={styles.row}>
 							<Item rounded style={{width: 170, borderRadius: 4}}>
 	            	<Input placeholder='...'
-								value={this.changeToCurrency(this.state.startingbid)}
+								value={Currency.convertNumberToCurrency(this.state.startingbid)}
 								onChangeText={(text) => {
 									this.setState({startingbid: text})
 								}}/>
@@ -244,7 +340,7 @@ class PushProduct extends Component {
 						<View style={styles.row}>
 							<Item rounded style={{width: 170, borderRadius: 4}}>
 	            	<Input placeholder='...'
-								value={this.changeToCurrency(this.state.bidincrement)}
+								value={Currency.convertNumberToCurrency(this.state.bidincrement)}
 								onChangeText={(text) => {
 									this.setState({bidincrement: text})
 								}}/>
@@ -330,25 +426,28 @@ class PushProduct extends Component {
 							<TouchableOpacity onPress={() => this.setState({mastercard: !this.state.mastercard})}>
 								<View style={styles.row1}>
 								<Image style={styles.paymentIcon} source={mastercard}/>
-								<Radio selected={this.state.mastercard} />
+								<Radio onPress={() => this.setState({mastercard: !this.state.mastercard})}
+                      selected={this.state.mastercard} />
 								</View>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={() => this.setState({paypal: !this.state.paypal})}>
 								<View style={styles.row1}>
 									<Image style={styles.paymentIcon} source={paypal}/>
-									<Radio selected={this.state.paypal} />
+									<Radio onPress={() => this.setState({paypal: !this.state.paypal})}
+                    selected={this.state.paypal} />
 								</View>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={() => this.setState({visa: !this.state.visa})}>
 								<View style={styles.row1}>
 									<Image style={styles.paymentIcon} source={visa}/>
-									<Radio selected={this.state.visa} />
+									<Radio onPress={() => this.setState({visa: !this.state.visa})}
+                      selected={this.state.visa} />
 								</View>
 							</TouchableOpacity>
 						</View>
 					</View>
 					}
-					<View style={[styles.row, {marginBottom: 20}]}>
+					<View style={styles.row}>
 						<Text style={styles.titleSection}>Shipping</Text>
 						<Picker
 								mode="dropdown"
@@ -361,7 +460,30 @@ class PushProduct extends Component {
 								<Item label="Free" value="Free" />
 						</Picker>
 					</View>
+          <View style={[styles.row, {marginBottom: 20}]}>
+            <Text style={styles.titleSection}>Condition</Text>
+            <Picker
+                mode="dropdown"
+                placeholder="Select One"
+                selectedValue={this.state.condition}
+                style={{width: 200}}
+                onValueChange={this.onValueChange3.bind(this)}
+              >
+                <Item label="New" value="New" />
+                <Item label="Like New" value="Likw New" />
+                <Item label="Under Warranty" value="Under Warranty" />
+                <Item label="80%" value="80%" />
+                <Item label="50%" value="50%" />
+                <Item label="Old" value="Old" />
+                <Item label="Unknown" value="Unknown" />
+            </Picker>
+          </View>
         </Content>
+        {
+          this.state.uploading && <View style={styles.uploading}>
+            <ActivityIndicator size='large'/>
+          </View>
+        }
       </Container>
 		);
 	}
@@ -369,6 +491,15 @@ class PushProduct extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white"
+  },
+  uploading: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    height: deviceHeight,
+    width: deviceWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
 	textinput: {
 		padding: 5,

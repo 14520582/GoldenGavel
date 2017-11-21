@@ -22,6 +22,7 @@ import {
   Form,
   View,
   H3,
+  Segment,
   Item as FormItem
 } from "native-base";
 import ToAPI from '../../server/ToAPI'
@@ -32,7 +33,9 @@ class MyStore extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      index: 0
+      index: 0,
+      showFilter: false,
+      isEnd: false,
     };
   }
   _onChangeTab = ({i, ref, from}) => {
@@ -56,12 +59,30 @@ class MyStore extends Component {
           <Right>
             <Button
               transparent
+              onPress={() => this.setState({showFilter: !this.state.showFilter})}
+            >
+              <Icon style={{fontSize: 35}} name={this.state.showFilter ? 'md-arrow-dropup' : 'md-arrow-dropdown'} />
+            </Button>
+            <Button
+              transparent
               onPress={() => this.props.navigation.navigate("PushProduct")}
             >
               <Icon style={{fontSize: 35}} name="md-cloud-upload" />
             </Button>
           </Right>
         </Header>
+        {
+        this.state.showFilter && <Segment style={styles.tabHeading}>
+            <Button first style={this.state.isEnd ? styles.normalButton : styles.activeButton}
+            onPress={() => this.setState({isEnd: !this.state.isEnd})}>
+              <Text>On going</Text>
+            </Button>
+            <Button style={this.state.isEnd ? styles.activeButton : styles.normalButton}
+            onPress={() => this.setState({isEnd: !this.state.isEnd})}>
+              <Text>End</Text>
+            </Button>
+          </Segment>
+        }
         <Tabs initialPage={0} onChangeTab={this._onChangeTab}>
           <Tab heading = {
             <TabHeading style={styles.tabHeading}>
@@ -69,7 +90,7 @@ class MyStore extends Component {
               <Text style={this.state.index == 0 ? styles.active : styles.normal} >Sell</Text>
             </TabHeading>
           }>
-            <Sell/>
+            <Sell isEnd={this.state.isEnd}/>
           </Tab>
           <Tab heading = {
             <TabHeading style={styles.tabHeading}>
@@ -77,7 +98,7 @@ class MyStore extends Component {
               <Text style={this.state.index == 1 ? styles.active : styles.normal}>Buy</Text>
             </TabHeading>
           }>
-            <Buy/>
+            <Buy isEnd={this.state.isEnd}/>
           </Tab>
         </Tabs>
       </Container>
@@ -90,6 +111,16 @@ const styles = StyleSheet.create({
   },
   active: {
     color: 'white'
+  },
+  activeButton: {
+    width: 150,
+    justifyContent: 'center',
+    backgroundColor: '#FFC107'
+  },
+  normalButton: {
+    width: 150,
+    justifyContent: 'center',
+    backgroundColor: '#FFA000'
   },
   tabHeading: {
     backgroundColor: '#FFA000'
