@@ -5,6 +5,32 @@ class ToAPI {
   static setUserInfo(userinfo){
     firebase.database().ref().child(`User/${userinfo.uid}`).set(userinfo)
   }
+  static setPhone(uid, phone){
+    firebase.database().ref().child(`User/${uid}/phoneNumber`).set(phone)
+  }
+  static setFacebook(uid, fb){
+    firebase.database().ref().child(`User/${uid}/facebook`).set(fb)
+  }
+  static setTwitter(uid, twitter){
+    firebase.database().ref().child(`User/${uid}/twitter`).set(twitter)
+  }
+  static setProfilePicture(uid, path){
+    const metadata = {
+      contentType: 'image/jpeg'
+    }
+    firebase.storage()
+      .ref(`User/${uid}`)
+      .putFile(path,metadata)
+      .then(uploadedFile => {
+        firebase.database().ref().child(`User/${uid}/photoURL`).set(uploadedFile.downloadURL)
+      })
+      .catch(err => {
+        //alert(err)
+      });
+  }
+  static setAddress(uid, address){
+    firebase.database().ref().child(`User/${uid}/address`).set(address)
+  }
   static getUserInfo(uid, callback){
     firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo.val())})
   }

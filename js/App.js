@@ -11,6 +11,7 @@ import Drawer from "./Drawer";
 import Product from "./components/Product/";
 import MyStore from "./components/MyStore/";
 import Login from "./components/Login/";
+import ListProduct from "./components/ListProduct/";
 import SplashScreen from "./components/SplashScreen/";
 import PushProduct from "./components/PushProduct/";
 import configureStore from './config/configureStore'
@@ -32,6 +33,7 @@ const AppNavigator = StackNavigator(
         Drawer: { screen: Drawer },
         Product: { screen: Product },
         PushProduct: { screen: PushProduct },
+        ListProduct: { screen: ListProduct },
         MyStore: { screen: MyStore},
         SplashScreen: { screen: SplashScreen },
         Login: {screen: Login}
