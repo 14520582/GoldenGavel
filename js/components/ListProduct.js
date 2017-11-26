@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet,TouchableOpacity} from "react-native";
+import { Platform, StyleSheet,TouchableOpacity, FlatList, View, Dimensions, ActivityIndicator} from "react-native";
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import {
@@ -18,87 +18,92 @@ import {
   ListItem,
   Picker,
   Form,
-  View,
   Input,
   H3,
   Item as FormItem,
   Thumbnail
 } from "native-base";
-import Filter from './Filter'
+import FilterBar from './FilterBar'
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
+import BriefProduct from './BriefProduct'
 import ToAPI from '../server/ToAPI'
 class ListProduct extends Component {
   constructor(props) {
 		super(props);
     this.state = {
       showfilter: false,
+      data: null
     };
   }
   componentWillMount (){
-    
+    if(this.props.category)
+    {
+      ToAPI.getItemByCategory(this.props.category,(items) =>{
+          this.setState({
+            data: items
+          })
+      })
+    }
+    else
+    {
+      //console.log(this.props.search)
+      ToAPI.getProductByName(this.props.search,(items) =>{
+          this.setState({
+            data: items
+          })
+      })
+    }
+  }
+  _renderItem = ({item}) => {
+    return(
+        <View>
+          <BriefProduct item = {item} navigation={this.props.navigation}/>
+        </View>
+      )
   }
   render() {
     return (
-      <Container style={styles.container}>
-        <Header searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000', alignItems: 'center'}}>
-          <View>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.goBack()}
-            >
-              <Icon style={{color: 'white'}} name="arrow-back" />
-            </Button>
-          </View>
-          <View style={{flex: 1, height: 40, backgroundColor: 'white', borderRadius: 4, alignItems: 'center'}}>
-            <Item style={{height: 40, alignItems: 'center', paddingLeft: 10}}>
-              <Icon name="search" />
-              <Input style={{height: 60}} placeholder="Search" />
+      <View>
+          {
+            this.state.data && this.state.data.length > 0 && <View>
+              <FlatList
+                data = {this.state.data}
+                extraData= {this.state}
+                keyExtractor={(item) => item.key}
+                renderItem = {this._renderItem}
+              />
+            </View>
+          }
+          {
+            this.state.data && this.state.data.length === 0 && <View style={styles.container}>
+              <Text style={{fontSize: 18}}>Sorry, we found no relevent results</Text>
+              <View style={{paddingTop: 7}}>
               <Button
-                transparent
-                onPress={() => this.setState({showfilter: !this.state.showfilter})}
+                style={{backgroundColor: '#FF8F00'}}
+                onPress={() => this.props.navigation.goBack()}
               >
-                <Icon style={{color : 'black'}} name="md-funnel" />
+                <Icon name="home" />
+                <Text>Go back Home</Text>
               </Button>
-            </Item>
-          </View>
-        </Header>
-        {
-          this.state.showfilter && <Filter/>
-        }
-        <Content>
-        </Content>
-      </Container>
+              </View>
+            </View>
+          }
+          {
+            !this.state.data && <View style={styles.container}>
+              <ActivityIndicator/>
+            </View>
+          }
+      </View>
     );
   }
 }
 const styles = StyleSheet.create({
 	container: {
-    backgroundColor: "grey"
+    paddingTop: deviceHeight/2 - 150,
+    alignItems:'center',
+    justifyContent: 'center'
   },
-  header: {
-    backgroundColor: "#FFA000",
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
-  footer: {
-    backgroundColor: "#FBFAFA",
-    flex: 1.5
-  },
-  avatar: {
-    margin: 10
-  },
-  listItem: {
-    color: '#ff1744',
-    fontSize: 12
-  },
-  listItemStyle: {
-    flexDirection: 'column'
-  }
 });
 function mapStateToProps (state) {
 	return {

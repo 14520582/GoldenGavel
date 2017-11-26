@@ -45,11 +45,19 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-		paddingLeft: 5,
 		paddingRight: 5,
+		paddingTop: 10,
+		paddingBottom: 10
+  },
+	rowinfobid1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+		paddingRight: 5,
+		paddingLeft: 5,
   },
 	containerByCategory: {
-		height: deviceWidth/2 + 50,
+		height: deviceWidth/2 + 60,
 		width: deviceWidth/2,
 		borderWidth: 0.5,
 		borderColor:'#CFD8DC'

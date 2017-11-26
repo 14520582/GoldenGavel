@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, View, Dimensions,Image } from "react-native";
+import { Platform, StyleSheet, View, Dimensions,Image, TouchableOpacity } from "react-native";
 import {
   Container,
   Header,
@@ -26,6 +26,7 @@ const mastercard = require('../assets/mastercard.png')
 const shipping = require('../assets/shipping.png')
 const cod = require('../assets/cod.png')
 import Currency from '../util/Currency'
+import DateTime from '../util/DateTime'
 const isCOD = null
 class BriefProduct extends Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class BriefProduct extends Component {
   render() {
     return (
       <View>
+        <TouchableOpacity activeOpacity={0.5} onPress={() => this.props.navigation.navigate("Product", {product: this.props.item})}>
         <View style={styles.container}>
           <View style={styles.imageContainer}>
             <Image style={styles.image} source={{ uri: this.props.item.image[0] }}/>
@@ -82,7 +84,7 @@ class BriefProduct extends Component {
                   <Icon name ='md-arrow-dropup' style={styles.arrowup}/>
                   <Text style={styles.numbids}>{this.props.item.numberofbid}</Text>
                 </View>
-                <Text style={styles.redText}>3h 20m</Text>
+                <Text style={styles.redText}>{DateTime.convertToStringTime(this.props.item.endtime)}</Text>
                 <View style={styles.row}>
                   <Text style={styles.nameProduct}>{this.props.item.condition}</Text>
                 </View>
@@ -102,6 +104,7 @@ class BriefProduct extends Component {
           </View>
         </View>
         <View style={styles.separate}/>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -19,6 +19,7 @@ import {
 } from "native-base";
 import { connect } from 'react-redux'
 import ToAPI from '../../server/ToAPI'
+import DateTime from '../../util/DateTime'
 import Swiper from 'react-native-swiper';
 import styles from './styles'
 import Category from './Category'
@@ -83,7 +84,7 @@ class Home extends Component {
 				</Left>
 				<Item>
 					<Icon name="search" />
-					<Input style={{height: 60}} placeholder="Search" />
+					<Input style={{height: 60}} onFocus={() => this.props.navigation.navigate("Search")} placeholder="Search" />
 				</Item>
         </Header>
         <Content>
@@ -105,7 +106,7 @@ class Home extends Component {
             <View style={styles.headerCategories}>
               <Text style={styles.titleCategories}>Categories</Text>
               <TouchableOpacity
-               onPress = { () => this.props.navigation.navigate('Home')}
+               onPress = { () => this.props.navigation.navigate('Categories', {categories: this.state.categories})}
               >
                 <Text style={styles.viewmore}>SEE ALL</Text>
               </TouchableOpacity>
@@ -190,32 +191,35 @@ class Home extends Component {
             }
             <View style={styles.divideLine}>
             </View>
-            <Category category='Fashion'/>
-            <Category category='Jewelry'/>
-            <Category category='Computer & Electronics'/>
-            <Category category='Watches'/>
-            <Category category='Travel'/>
-            <Category category='Collectibles'/>
-            <Category category='Sunglasses'/>
-            <Category category='Discount Certificates'/>
+            <Category category='Fashion' navigation={this.props.navigation}/>
+            <Category category='Jewelry' navigation={this.props.navigation}/>
+            <Category category='Computer & Electronics' navigation={this.props.navigation}/>
+            <Category category='Watches' navigation={this.props.navigation}/>
+            <Category category='Travel' navigation={this.props.navigation}/>
+            <Category category='Collectibles' navigation={this.props.navigation}/>
+            <Category category='Sunglasses' navigation={this.props.navigation}/>
+            <Category category='Discount Certificates' navigation={this.props.navigation}/>
         </Content>
       </Container>
     );
   }
   _renderCategory = ({item}) => (
     <View style={styles.category}>
-      <Image style={styles.imageCatergories} source={{uri: item.image}}>
-        <View style={styles.containerCategory}>
-          <Text style={styles.nameproduct1}>{item.category}</Text>
-        </View>
-      </Image>
+      <TouchableOpacity activeOpacity={0.5} onPress={() => this.props.navigation.navigate("CategoryListProduct", {category: item.category})}>
+        <Image style={styles.imageCatergories} source={{uri: item.image}}>
+          <View style={styles.containerCategory}>
+            <Text style={styles.nameproduct1}>{item.category}</Text>
+          </View>
+        </Image>
+      </TouchableOpacity>
     </View>
   );
   _renderItem = ({item}) => (
     <View style={styles.containerBid}>
+      <TouchableOpacity activeOpacity={0.5} onPress={() => this.props.navigation.navigate("Product", {product: item})}>
       <Image style={styles.imageBid} source={{uri: item.image[0]}}>
-        <View style={[styles.rowinfobid, styles.statusHeader]}>
-          <Text>2 days 3 hrs</Text>
+        <View style={[styles.rowinfobid1, styles.statusHeader]}>
+          <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
           <View style={styles.row}>
             <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
             <Text style={styles.colortext}>{item.numberofbid}</Text>
@@ -225,18 +229,19 @@ class Home extends Component {
           <Text numberOfLines={2} style={styles.nameproduct1}>{item.name}</Text>
         </View>
       </Image>
-      <View style={styles.rowinfobid}>
+      <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Current Bid:</Text>
         <Text style={styles.titleCategories}>{item.currentbid + ' đ'}</Text>
       </View>
-      <View style={styles.rowinfobid}>
+      <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Bid Increment:</Text>
         <Text style={styles.titleCategories}>{item.bidincrement + ' đ'}</Text>
       </View>
-      <View style={styles.rowinfobid}>
+      <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Starting Bid:</Text>
         <Text style={styles.titleCategories}>{item.startingbid + ' đ'}</Text>
       </View>
+      </TouchableOpacity>
     </View>
   );
 }

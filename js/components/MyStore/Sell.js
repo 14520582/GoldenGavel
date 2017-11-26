@@ -60,13 +60,6 @@ class Sell extends Component {
         </View>
       )
   }
-  _renderEndItem = ({item}) => {
-      return (
-        <View>
-          <BriefProduct/>
-        </View>
-      )
-  }
   _renderHeader = () => {
     return (
       <View style={styles.header}>
@@ -85,24 +78,13 @@ class Sell extends Component {
               <Text style={styles.textHeader}>{this.props.isEnd ? 'Ended' : 'On going'}</Text>
             </View>
           </View>
-          {
-            !this.props.isEnd && <FlatList
-              data = {this.state.ongoing}
+            <FlatList
+              data = {this.props.isEnd ? this.state.end : this.state.ongoing}
               removeClippedSubviews={true}
               extraData= {this.state}
               keyExtractor={(item) => item.key}
               renderItem = {this._renderOngoingItem}
             />
-          }
-          {
-            this.props.isEnd && <FlatList
-              data = {this.state.end}
-              removeClippedSubviews={true}
-              extraData= {this.state}
-              keyExtractor={(item) => item.key}
-              renderItem = {this._renderEndItem}
-            />
-          }
         </Content>
       </Container>
     );

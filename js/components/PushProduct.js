@@ -94,21 +94,21 @@ class PushProduct extends Component {
     if(mess)
     {
         this.setState({uploading: false})
-        alert(mess)
+        alert(null,mess)
         return
     }
     let images = []
     let a = await ToAPI.upLoadPhoto(this.state.image1.path, this.state.categories[this.state.category].category, this.state.name, 1)
     .catch(err => {
         this.setState({uploading: false})
-        alert(err)
+        alert(null,err)
     });
     images.push(a.downloadURL)
     if(this.state.image2 != null){
       a = await ToAPI.upLoadPhoto(this.state.image2.path, this.state.categories[this.state.category].category, this.state.name, 2)
       .catch(err => {
           this.setState({uploading: false})
-          alert(err)
+          alert(null,err)
       });
       images.push(a.downloadURL)
     }
@@ -118,7 +118,7 @@ class PushProduct extends Component {
       a = await ToAPI.upLoadPhoto(this.state.image3.path, this.state.categories[this.state.category].category, this.state.name, 3)
       .catch(err => {
           this.setState({uploading: false})
-          alert(err)
+          alert(null,err)
       });
       images.push(a.downloadURL)
     }
@@ -128,7 +128,7 @@ class PushProduct extends Component {
       a = await ToAPI.upLoadPhoto(this.state.image4.path, this.state.categories[this.state.category].category, this.state.name, 4)
       .catch(err => {
           this.setState({uploading: false})
-          alert(err)
+          alert(null,err)
       });
       images.push(a.downloadURL)
     }
@@ -151,6 +151,8 @@ class PushProduct extends Component {
       condition: this.state.condition,
       endtime: DateTime.convertStringToNumber(this.state.endtime),
       starttime: starttime.getTime(),
+      numberofbid: 0,
+      currentbid: Number(this.state.startingbid.replace(',', "")),
       payment: this.state.payment == 'Transfer' ? payment : this.state.payment,
       description: this.state.description,
       category: this.state.categories[this.state.category].category,
@@ -158,7 +160,7 @@ class PushProduct extends Component {
       shipping: this.state.shipping
     }
     ToAPI.pushProduct(product,this.props.infouser.uid)
-    alert('Upload Successfully')
+    alert(null,'Upload Successfully')
     //this.setState({uploading: false})
     this.initialData()
   }

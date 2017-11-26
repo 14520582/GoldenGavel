@@ -24,8 +24,9 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 import LinearGradient from 'react-native-linear-gradient';
 import ToAPI from '../../server/ToAPI'
+import DateTime from '../../util/DateTime'
 const gradient = ['#FFA000','#FFCA28','#FFD54F','#FFE082']
-export default class Category extends Component {
+class Category extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +46,7 @@ export default class Category extends Component {
         <View style={styles.headerCategories}>
           <Text style={styles.titleCategories}>{this.props.category}</Text>
           <TouchableOpacity
-           onPress = { () => this.props.navigation.navigate('Home')}
+           activeOpacity={0.5} onPress={() => this.props.navigation.navigate("CategoryListProduct", {category: this.props.category})}
           >
             <Text style={styles.viewmore}>VIEW MORE</Text>
           </TouchableOpacity>
@@ -76,12 +77,15 @@ export default class Category extends Component {
   }
   _renderByCategory = ({item}) => (
     <View removeClippedSubviews={true} style={styles.containerByCategory}>
+    <TouchableOpacity
+     activeOpacity={0.5} onPress={() => this.props.navigation.navigate("Product", {product: item})}
+    >
       {
         <View style={{height: deviceWidth/2, width: deviceWidth/2}}>
           <ResponsiveImage style={{alignSelf: 'center'}} initWidth={deviceWidth/2} initHeight={deviceWidth/2} source={{uri: item.image[0]}}>
           </ResponsiveImage>
           <View style={[styles.rowinfobid, styles.statusHeader, {position: 'absolute',width: deviceWidth/2}]}>
-            <Text>2 days 3 hrs</Text>
+            <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
             <View style={styles.row}>
               <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
               <Text style={styles.colortext}>{item.numberofbid}</Text>
@@ -97,6 +101,8 @@ export default class Category extends Component {
           <Text>{item.bidincrement}</Text>
         </View>
       </View>
+    </TouchableOpacity>
     </View>
   );
 }
+export default Category;

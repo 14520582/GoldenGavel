@@ -10,9 +10,11 @@ import firebase from 'react-native-firebase'
 import Drawer from "./Drawer";
 import Product from "./components/Product/";
 import MyStore from "./components/MyStore/";
+import Search from "./components/Search/";
 import Login from "./components/Login/";
-import ListProduct from "./components/ListProduct/";
+import CategoryListProduct from "./components/CategoryListProduct/";
 import SplashScreen from "./components/SplashScreen/";
+import Categories from "./components/Categories/";
 import PushProduct from "./components/PushProduct/";
 import configureStore from './config/configureStore'
 import { Provider } from 'react-redux'
@@ -32,9 +34,11 @@ const AppNavigator = StackNavigator(
     {
         Drawer: { screen: Drawer },
         Product: { screen: Product },
+        Search: { screen: Search },
         PushProduct: { screen: PushProduct },
-        ListProduct: { screen: ListProduct },
+        CategoryListProduct: { screen: CategoryListProduct },
         MyStore: { screen: MyStore},
+        Categories: { screen: Categories },
         SplashScreen: { screen: SplashScreen },
         Login: {screen: Login}
     },

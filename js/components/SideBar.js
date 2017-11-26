@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     position: "absolute",
-    left: 247,
+    left: deviceWidth / 1.43,
     top: Platform.OS === "android" ? deviceHeight / 5 : deviceHeight / 4,
   },
   sidebarIcon: {
