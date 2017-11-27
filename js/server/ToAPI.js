@@ -1,7 +1,7 @@
 
 import firebase from 'react-native-firebase'
-//const firebaseApp = firebase.app('app')
 class ToAPI {
+  //USER
   static setUserInfo(userinfo){
     firebase.database().ref().child(`User/${userinfo.uid}`).set(userinfo)
   }
@@ -13,6 +13,12 @@ class ToAPI {
   }
   static setTwitter(uid, twitter){
     firebase.database().ref().child(`User/${uid}/twitter`).set(twitter)
+  }
+  static setAddress(uid, address){
+    firebase.database().ref().child(`User/${uid}/address`).set(address)
+  }
+  static getUserInfo(uid, callback){
+    firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo.val())})
   }
   static setProfilePicture(uid, path){
     const metadata = {
@@ -28,11 +34,60 @@ class ToAPI {
         //alert(err)
       });
   }
-  static setAddress(uid, address){
-    firebase.database().ref().child(`User/${uid}/address`).set(address)
+  static getCurrentBid(productid, category, callback) {
+    firebase.database().ref(`Product/${category}/${productid}/currentbid`).on('value', (bid) => {callback(bid.val())})
   }
-  static getUserInfo(uid, callback){
-    firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo.val())})
+  //PRODUCT
+  static bid(uid,product,bid){
+    ToAPI.getCurrentBid(productid,category,(currentbid) => {
+          if(bid > currentbid){
+            firebase.database().ref().child(`Product/${product.category}/${product.key}/currentbid`).set(bid)
+            let now = new Date()
+            let details = {
+              uid: uid,
+              bid: bid,
+              date: now.getTime()
+            }
+            firebase.database().ref().child(`BidDetail/${product.key}`).push(details)
+            let contents = {
+              sender: uid,
+              date: now.getTime(),
+              type: 'Bid',
+              content: {
+                nameitem: product.name,
+                keyitem: product.key,
+                category: product.category
+              },
+              status: 'New'
+            }
+            firebase.database().ref().child(`Notification/${product.owner}`).push(contents)
+          }
+    })
+  }
+  static getDetailsBid(productid,callback){
+    firebase.database().ref().child(`BidDetail/${productid}`).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static getNotification(uid,callback){
+    firebase.database().ref().child(`Notification/${uid}`).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static seen(uid, notificationid){
+    firebase.database().ref().child(`Notification/${uid}/${notificationid}/status`).set('Seen')
   }
   static getBanner(callback){
     firebase.database().ref('Banner').once('value', (snap) => {

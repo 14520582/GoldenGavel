@@ -16,6 +16,7 @@ import CategoryListProduct from "./components/CategoryListProduct/";
 import SplashScreen from "./components/SplashScreen/";
 import Categories from "./components/Categories/";
 import PushProduct from "./components/PushProduct/";
+import Notification from "./components/Notification/";
 import configureStore from './config/configureStore'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react'
@@ -36,6 +37,7 @@ const AppNavigator = StackNavigator(
         Product: { screen: Product },
         Search: { screen: Search },
         PushProduct: { screen: PushProduct },
+        Notification: { screen: Notification },
         CategoryListProduct: { screen: CategoryListProduct },
         MyStore: { screen: MyStore},
         Categories: { screen: Categories },
@@ -43,7 +45,7 @@ const AppNavigator = StackNavigator(
         Login: {screen: Login}
     },
     {
-        initialRouteName: "PushProduct",
+        initialRouteName: "SplashScreen",
         headerMode: "none",
     }
 );

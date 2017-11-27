@@ -25,4 +25,23 @@ module.exports = StyleSheet.create({
     padding: 10,
     backgroundColor: 'rgba(255,255,255,0.7)',
   },
+	active: {
+		color: 'white'
+	},
+	activeButton: {
+		width: 150,
+		justifyContent: 'center',
+		backgroundColor: '#FFC107'
+	},
+	normalButton: {
+		width: 150,
+		justifyContent: 'center',
+		backgroundColor: '#FFA000'
+	},
+	tabHeading: {
+		backgroundColor: '#FFA000'
+	},
+	normal: {
+		color: '#FFECB3'
+	},
 });

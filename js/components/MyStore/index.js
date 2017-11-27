@@ -27,6 +27,7 @@ import {
 } from "native-base";
 import ToAPI from '../../server/ToAPI'
 import { connect } from 'react-redux'
+import styles from './styles'
 import Sell from './Sell'
 import Buy from './Buy'
 class MyStore extends Component {
@@ -105,30 +106,6 @@ class MyStore extends Component {
     );
   }
 }
-const styles = StyleSheet.create({
-	container: {
-    backgroundColor: "#FBFAFA"
-  },
-  active: {
-    color: 'white'
-  },
-  activeButton: {
-    width: 150,
-    justifyContent: 'center',
-    backgroundColor: '#FFC107'
-  },
-  normalButton: {
-    width: 150,
-    justifyContent: 'center',
-    backgroundColor: '#FFA000'
-  },
-  tabHeading: {
-    backgroundColor: '#FFA000'
-  },
-  normal: {
-    color: '#FFECB3'
-  },
-});
 function mapStateToProps (state) {
 	return {
 		infouser: state.infouser

@@ -69,6 +69,13 @@ class PushProduct extends Component {
 			visa: false,
     })
   }
+  componentWillMount() {
+     ToAPI.getCategories((categories) =>{
+      this.setState({
+        categories: categories
+      })
+    })
+  }
 	onValueChange2(value: string) {
 	 this.setState({
 		 category: value
@@ -211,15 +218,6 @@ class PushProduct extends Component {
 			}
 	  }
 		});
-	}
-	componentWillMount() {
-     // let a = Number('300000000')
-     // alert(a)
-		 ToAPI.getCategories((categories) =>{
-			this.setState({
-				categories: categories
-			})
-		})
 	}
 	changeToCurrency(money) {
 		let value = money
