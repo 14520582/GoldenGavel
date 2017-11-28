@@ -45,12 +45,27 @@ class NotificationRow extends Component {
           <View style={{width: deviceWidth - 100}}>
             <Text numberOfLines={2}>
               <Text style={styles.h1}>{this.state.sender.displayName}</Text>
-              <Text> just bidded for the item: </Text>
-              <Text style={styles.h1}>{this.props.item.content.nameitem}</Text>
+              {
+                this.props.item.type === 'Bid' && <Text>
+                  <Text> just bidded for the item: </Text>
+                  <Text style={styles.h1}>{this.props.item.content.nameitem}</Text>
+                </Text>
+              }
+              {
+                this.props.item.type === 'Message' && <Text>
+                  <Text> just sent you a message: </Text>
+                  <Text style={styles.message}>{this.props.item.content.message}</Text>
+                </Text>
+              }
             </Text>
           </View>
           <View style={styles.textcontainer}>
-            <Thumbnail style={{height: 25, width: 25}} source={require('../assets/auction.png')} />
+            {
+              this.props.item.type === 'Bid' && <Thumbnail style={styles.iconType} source={require('../assets/auction.png')} />
+            }
+            {
+              this.props.item.type === 'Message' && <Thumbnail style={styles.iconType} source={require('../assets/chat.png')} />
+            }
             <Text style={this.props.item.status === 'New' ? styles.newtime : styles.seentime}>{moment(new Date(this.props.item.date)).calendar()}</Text>
           </View>
         </View>
@@ -64,6 +79,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 8
   },
+  iconType: {
+    height: 25,
+    width: 25
+  },
   newtime: {
     paddingLeft: 5,
     color: '#FF6F00'
@@ -75,6 +94,11 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 20,
+  },
+  message: {
+    color: 'black',
+    fontStyle: 'italic',
+    fontWeight: 'bold',
   },
   content: {
     paddingLeft: 10,

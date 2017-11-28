@@ -32,20 +32,33 @@ class NotificationList extends Component {
   constructor(props) {
 		super(props);
     this.state = {
-      data: null
+      messages: null,
+      notifications: null,
     };
   }
   _renderItem = ({item}) => {
     return(
         <View>
           <TouchableOpacity onPress={() => {
-            if(item.type === 'Bid') {
               if(item.status === 'New')
-              ToAPI.seen(this.props.infouser.uid, item.key)
-              ToAPI.getItem(item.content.keyitem, item.content.category, (product) => {
-                this.props.navigation.navigate('Product', {product: product})
-              })
-            }
+              ToAPI.seen(this.props.infouser.uid, item.key, this.props.type)
+              if(item.type === 'Bid') {
+                ToAPI.getItem(item.content.keyitem, item.content.category, (product) => {
+                  this.props.navigation.navigate('Product', {product: product})
+                })
+              }
+              if(item.type === 'Message') {
+                ToAPI.getUserInfo(item.sender,(sender) => {
+                  let content={
+                    senderName: sender.displayName,
+                    senderPhoto: sender.photoURL,
+                    senderUid: item.sender,
+                    message: item.content.message,
+                    date: item.date
+                  }
+                  this.props.openMessageBox(true,content)
+                })
+              }
           }}>
             <NotificationRow item={item}/>
           </TouchableOpacity>
@@ -53,10 +66,8 @@ class NotificationList extends Component {
       )
   }
   componentWillMount (){
-    if(this.props.type === 'Notification')
-      {
         ToAPI.getNotification(this.props.infouser.uid,(notifications) => {
-          this.setState({data: notifications})
+            this.setState({notifications: notifications})
           let num = 0
           notifications.map((value) => {
             if(value.status === 'New')
@@ -64,21 +75,29 @@ class NotificationList extends Component {
           })
           this.props.dispatchUpdateNotificationNumber(num)
         })
-      }
+        ToAPI.getMessage(this.props.infouser.uid,(messages) => {
+            this.setState({messages: messages})
+          let num = 0
+          messages.map((value) => {
+            if(value.status === 'New')
+             num++
+          })
+          this.props.dispatchUpdateMessageNumber(num)
+        })
   }
   render() {
     return (
       <View>
         {
-          this.state.data && <FlatList
-              data = {this.state.data}
+          this.state.notifications && this.state.messages && <FlatList
+              data = {this.props.type === 'Notification' ? this.state.notifications : this.state.messages}
               extraData= {this.state}
               keyExtractor={(item) => item.key}
               renderItem = {this._renderItem}
           />
         }
         {
-          !this.state.data && <View style={styles.container}>
+          !this.state.notifications && !this.state.messages && <View style={styles.container}>
             <ActivityIndicator/>
           </View>
         }

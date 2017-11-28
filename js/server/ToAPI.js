@@ -86,8 +86,34 @@ class ToAPI {
       callback(items.reverse())
     })
   }
-  static seen(uid, notificationid){
-    firebase.database().ref().child(`Notification/${uid}/${notificationid}/status`).set('Seen')
+  static sendMessage(uid, recipient, message, callback){
+    let now = new Date()
+    let contents = {
+      sender: uid,
+      date: now.getTime(),
+      type: 'Message',
+      content: {
+        message: message,
+      },
+      status: 'New'
+    }
+    firebase.database().ref().child(`Message/${recipient}`).push(contents, (result) => {
+        callback(result)
+    })
+  }
+  static getMessage(uid,callback){
+    firebase.database().ref().child(`Message/${uid}`).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static seen(uid, notificationid, type){
+    firebase.database().ref().child(`${type}/${uid}/${notificationid}/status`).set('Seen')
   }
   static getBanner(callback){
     firebase.database().ref('Banner').once('value', (snap) => {
