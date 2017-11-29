@@ -53,7 +53,7 @@ class Sell extends Component {
       ongoing: ongoing
     })
   }
-  _renderOngoingItem = ({item}) => {
+  _renderItem = ({item}) => {
       return (
         <View>
           <BriefProduct item = {item}/>
@@ -83,7 +83,7 @@ class Sell extends Component {
               removeClippedSubviews={true}
               extraData= {this.state}
               keyExtractor={(item) => item.key}
-              renderItem = {this._renderOngoingItem}
+              renderItem = {this._renderItem}
             />
         </Content>
       </Container>

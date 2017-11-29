@@ -39,7 +39,7 @@ class ToAPI {
   }
   //PRODUCT
   static bid(uid,product,bid){
-    ToAPI.getCurrentBid(productid,category,(currentbid) => {
+    ToAPI.getCurrentBid(product.key,product.category,(currentbid) => {
           if(bid > currentbid){
             firebase.database().ref().child(`Product/${product.category}/${product.key}/currentbid`).set(bid)
             let now = new Date()
@@ -61,6 +61,11 @@ class ToAPI {
               status: 'New'
             }
             firebase.database().ref().child(`Notification/${product.owner}`).push(contents)
+            let brief = {
+              key: product.key,
+              category: product.category
+            }
+            firebase.database().ref().child(`Bid/${uid}/${product.key}`).set(brief)
           }
     })
   }
@@ -145,6 +150,32 @@ class ToAPI {
       });
     })
   }
+  static getMyBriefBid(uid, callback) {
+    firebase.database().ref(`Bid/${uid}`).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+            let item = child.val()
+            item['key'] = child.key
+            items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static getMyBidDetails(uid, callback){
+    this.getMyBriefBid(uid, (bids) => {
+      let items = [];
+      bids.forEach((i, index, array) => {
+        this.getItem(i.key, i.category,(item) => {
+          items.push(item)
+          if(index === array.length - 1)
+          {
+            //console.log(items.length)
+            callback(items)
+          }
+        })
+      });
+    })
+  }
   static getProductByName(name, callback){
     this.getCategories((categories) => {
       let items = [];
@@ -213,7 +244,11 @@ class ToAPI {
     })
   }
   static getItem (id,category,callback) {
-    firebase.database().ref(`Product/${category}/${id}`).on('value', (item) => {callback(item.val())})
+    firebase.database().ref(`Product/${category}/${id}`).on('value', (item) => {
+      let product = item.val()
+      product['key'] = item.key
+      callback(product)
+    })
   }
   static getNewItem (limit,callback) {
     firebase.database().ref('Product/NewItem').on('value', (snap) => {
