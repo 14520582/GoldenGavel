@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet,TouchableOpacity,TextInput} from "react-native";
+import { Platform, StyleSheet,TouchableOpacity,TextInput,Modal} from "react-native";
 import imgPhone from '../assets/call.png'
 import imgChat from '../assets/mess.png'
-import coverBackground from '../assets/coverBackground.jpg'
 import firebase from 'react-native-firebase';
-import Modal from 'react-native-modal';
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import ToAPI from '../server/ToAPI'
@@ -35,15 +33,16 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state ={
-      isModalOpen: false,
+      modalVisible: false,
       phone: null,
       facebook: null,
       twitter: null,
       address:null
     }
   }
-  _showModal = () => {this.setState({isModalOpen: true})}
-  _hideModal = () => {this.setState({isModalOpen: false})}
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
   savedata = () => {
     if(this.state.phone === null && this.state.address === null){
       alert("Bạn cần nhập số điện thoại và địa chỉ");
@@ -53,7 +52,7 @@ class Profile extends Component {
       ToAPI.setFacebook(this.props.infouser.uid, this.state.facebook)
       ToAPI.setTwitter(this.props.infouser.uid, this.state.twitter)
       ToAPI.setAddress(this.props.infouser.uid, this.state.address)
-      this._hideModal;
+      this.setState({modalVisible:false});
     }
 
   }
@@ -75,7 +74,7 @@ class Profile extends Component {
           <Right>
           <Button
               transparent
-              onPress={this._showModal}
+              onPress={() => this.setState({modalVisible:true})}
             >
               <Icon name="create" />
             </Button>
@@ -144,13 +143,17 @@ class Profile extends Component {
             </ListItem>
           </List>
         </View>
-        <Modal isVisible = {this.state.isModalOpen}>
+        <Modal 
+          animationType="slide"
+          transparent={true}
+          visible = {this.state.modalVisible} 
+          onRequestClose={() => {this.setState({modalVisible:false})}}>          
          <Container style={styles.container}>
          <Header noShadow={true} searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
          <Left>
            <Button
              transparent
-             onPress={this._hideModal}>
+             onPress={() => {this.setState({modalVisible:false})}}>
              <Icon name="arrow-back" />
            </Button>
          </Left>
@@ -164,7 +167,7 @@ class Profile extends Component {
               <TouchableOpacity transparent>
                 <Thumbnail large style = {styles.avatar} source={{uri: this.props.infouser.photoURL}} />  
               </TouchableOpacity>              
-              <TextInput style={{ alignSelf:'center', width:80, fontSize:17}}>{this.props.infouser.displayName}</TextInput>
+              <Input style={{ alignSelf:'center', fontSize:17}} placeholder={this.props.infouser.displayName}/>
             </View>         
             <Form>
               <Item>
@@ -212,19 +215,12 @@ class Profile extends Component {
   }
 }
 const styles = StyleSheet.create({
-	container: {
+  container: {
     backgroundColor: "#FBFAFA"
   },
   header: {
     backgroundColor: "#F5F5F5",
     flex: 0.7,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  coverBackground: {
-    height: 250,
-    width: null,
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -261,18 +257,19 @@ const styles = StyleSheet.create({
   }
 });
 function mapStateToProps (state) {
-	return {
-		infouser: state.infouser,
+  return {
+    infouser: state.infouser,
     firebase: state.fibase
-	}
+  }
 }
 function mapDispatchToProps (dispatch) {
-	return{
-		dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser))
-	}
+  return{
+    dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser))
+  }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
 ) (Profile)
+
