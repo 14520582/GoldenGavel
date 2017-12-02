@@ -119,25 +119,32 @@ class Login extends Component {
 	    return firebase.auth().signInWithCredential(credential);
 	  })
 	  .then((currentUser) => {
-				let userinfo ={
-					displayName: currentUser.displayName,
-					email: currentUser.email,
-					phoneNumber: "09877554333",
-					photoURL: currentUser.photoURL,
-					uid: currentUser.uid,
-					address: "",
-					facebook: "facebook.com/temp",
-					twitter: "twitter.com/temp",
-				}
-				ToAPI.setUserInfo(userinfo)
-				this.props.dispatchInfoUserUpdate(userinfo)
+				ToAPI.getUserInfo(currentUser.uid,(user) => {
+					if(user){
+						this.props.dispatchInfoUserUpdate(user)
+					}
+					else {
+						let userinfo = {
+							displayName: currentUser.displayName,
+							email: currentUser.email,
+							phoneNumber: "09877554333",
+							photoURL: currentUser.photoURL,
+							uid: currentUser.uid,
+							address: "",
+							facebook: "facebook.com/temp",
+							twitter: "twitter.com/temp",
+						}
+						ToAPI.setUserInfo(userinfo)
+						this.props.dispatchInfoUserUpdate(userinfo)
+					}
+				})
 				this.props.navigation.navigate('Home')
-	  })
-	  .catch((error) => {
-			this.setState ({
-					isLoading: false
-			})
-	  });
+		  })
+		  .catch((error) => {
+				this.setState ({
+						isLoading: false
+				})
+		  });
 	}
 }
 const styles = StyleSheet.create({

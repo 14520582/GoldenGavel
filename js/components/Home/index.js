@@ -247,7 +247,7 @@ class Home extends Component {
 }
 function mapStateToProps (state) {
 	return {
-		infouser: state.infouser
+		infouser: state.infouser,
 	}
 }
 export default connect(

@@ -62,7 +62,7 @@ class Notification extends Component {
   }
   onSendMessage(){
     this.setState({isSending: true})
-    ToAPI.sendMessage(this.props.infouser.uid, this.state.content.senderUid, this.state.message, (result) => {
+    ToAPI.sendMessage(this.props.infouser.uid, this.state.content.uid, this.state.message, (result) => {
       this.setState({isSending: false})
       this.openMessageBox(false)
     })
@@ -83,10 +83,12 @@ class Notification extends Component {
             <Icon style={styles.iconclose} name='md-close'/>
           </TouchableOpacity>
           <View style={styles.containermessage}>
-            <View style={styles.userinfo}>
-              <Thumbnail style={{height: 45, width: 45}} source={this.state.content ? {uri: this.state.content.senderPhoto} : null} />
-              <Text style={{paddingLeft: 10, fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>{this.state.content ? this.state.content.senderName : ''}</Text>
-            </View>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile", {anotherUser: this.state.content})}>
+              <View style={styles.userinfo}>
+                <Thumbnail style={{height: 45, width: 45}} source={this.state.content ? {uri: this.state.content.photoURL} : null} />
+                <Text style={{paddingLeft: 10, fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>{this.state.content ? this.state.content.displayName : ''}</Text>
+              </View>
+            </TouchableOpacity>
             <Text onLayout={(event) => this.measureView(event)} style={{paddingTop: 5, paddingLeft: 5, fontSize: 18}}>{this.state.content ? this.state.content.message : null}</Text>
             <Text style={{marginRight: 3, padding: 5, fontStyle: 'italic', alignSelf: 'flex-end', color: '#0288D1'}}>{this.state.content ? moment(new Date(this.state.content.date)).calendar() : null}</Text>
           </View>

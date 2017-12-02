@@ -18,7 +18,12 @@ class ToAPI {
     firebase.database().ref().child(`User/${uid}/address`).set(address)
   }
   static getUserInfo(uid, callback){
-    firebase.database().ref(`User/${uid}`).once('value', (userinfo) => {callback(userinfo.val())})
+    firebase.database().ref(`User/${uid}`).on('value', (userinfo) => {
+      if(userinfo.exists())
+        callback(userinfo.val())
+      else
+        callback(false)
+    })
   }
   static setProfilePicture(uid, path){
     const metadata = {
@@ -91,6 +96,17 @@ class ToAPI {
       callback(items.reverse())
     })
   }
+  static getNotificationOnce(uid,callback){
+    firebase.database().ref().child(`Notification/${uid}`).once('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
   static sendMessage(uid, recipient, message, callback){
     let now = new Date()
     let contents = {
@@ -108,6 +124,17 @@ class ToAPI {
   }
   static getMessage(uid,callback){
     firebase.database().ref().child(`Message/${uid}`).on('value', (snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        let item = child.val()
+        item['key'] = child.key
+        items.push(item);
+      });
+      callback(items.reverse())
+    })
+  }
+  static getMessageOnce(uid,callback){
+    firebase.database().ref().child(`Message/${uid}`).once('value', (snap) => {
       let items = [];
       snap.forEach((child) => {
         let item = child.val()

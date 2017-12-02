@@ -56,7 +56,7 @@ class Sell extends Component {
   _renderItem = ({item}) => {
       return (
         <View>
-          <BriefProduct item = {item}/>
+          <BriefProduct item = {item} navigation={this.props.navigation}/>
         </View>
       )
   }

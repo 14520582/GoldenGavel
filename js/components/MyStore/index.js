@@ -91,7 +91,7 @@ class MyStore extends Component {
               <Text style={this.state.index == 0 ? styles.active : styles.normal} >Sell</Text>
             </TabHeading>
           }>
-            <Sell isEnd={this.state.isEnd}/>
+            <Sell isEnd={this.state.isEnd} navigation={this.props.navigation}/>
           </Tab>
           <Tab heading = {
             <TabHeading style={styles.tabHeading}>
@@ -99,7 +99,7 @@ class MyStore extends Component {
               <Text style={this.state.index == 1 ? styles.active : styles.normal}>Buy</Text>
             </TabHeading>
           }>
-            <Buy isEnd={this.state.isEnd}/>
+            <Buy isEnd={this.state.isEnd} navigation={this.props.navigation}/>
           </Tab>
         </Tabs>
       </Container>

@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Platform,
   Dimensions,
-  View
+  View,
+  TouchableOpacity
 } from "react-native";
 import {
 	Content,
@@ -30,7 +31,10 @@ const drawerCover = require("../assets/newdracover.png");
 import firebase from 'react-native-firebase';
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
+import { updateNotificationNumber, updateMessageNumber } from '../actions/notification'
 import configureStore from '../config/configureStore'
+import ToAPI from '../server/ToAPI'
+import Auth from '../util/Auth'
 const {persistor} = configureStore()
 const datas = [
 	{
@@ -69,11 +73,12 @@ class SideBar extends Component {
 		};
 	}
   signOut() {
-     firebase.auth().signOut().then(() => {
-      persistor.purge()
-      this.props.navigation.navigate("Login")
-     }).catch((error) => {
-	   });
+    Auth.logout(this.props.navigation)
+     // firebase.auth().signOut().then(() => {
+     //  persistor.purge()
+     //  this.props.navigation.navigate("Login")
+     // }).catch((error) => {
+	   // });
   }
 	render() {
 		return (
@@ -81,10 +86,10 @@ class SideBar extends Component {
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
 					<Image source={drawerCover} style={styles.drawerCover}>
             <View style={styles.infoUser}>
-						      <Thumbnail source={{uri: this.props.infouser.photoURL}} />
+						      <Thumbnail source={this.props.infouser ? {uri: this.props.infouser.photoURL} : null} />
                   <View style={{paddingLeft: 10}}>
-                    <Text style={{color: 'white', fontWeight: 'bold'}}>{this.props.infouser.displayName}</Text>
-                    <Text style={{color: 'white'}}>{this.props.infouser.email}</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>{this.props.infouser ? this.props.infouser.displayName : 'loading...'}</Text>
+                    <Text style={{color: 'white'}}>{this.props.infouser ? this.props.infouser.email : 'loading...'}</Text>
                   </View>
             </View>
             <View style={styles.buttonContainer}>
@@ -96,32 +101,58 @@ class SideBar extends Component {
       				</Button>
             </View>
 					</Image>
-					<List
-						dataArray={datas}
-						renderRow={data =>
-							<ListItem button noBorder onPress={() => {
-                this.props.navigation.navigate(data.route,{user: 'f'})}}>
-								<Left>
-									<Icon active name={data.icon} style={{ color: "#777", fontSize: 26, width: 30 }} />
-									<Text style={styles.text}>
-										{data.name}
-									</Text>
-								</Left>
-								{data.types &&
-									<Right style={{ flex: 1 }}>
-										<Badge
-											style={{
-												borderRadius: 3,
-												height: 25,
-												width: 72,
-												backgroundColor: data.bg,
-											}}
-										>
-											<Text style={styles.badgeText}>{`${data.types} Types`}</Text>
-										</Badge>
-									</Right>}
-							</ListItem>}
-					/>
+          <ListItem button noBorder onPress={() => {
+            this.props.navigation.navigate('Home')}}>
+            <Left>
+              <Icon active name='home' style={{ color: "#777", fontSize: 26, width: 30 }} />
+              <Text style={styles.text}>
+                Home
+              </Text>
+            </Left>
+          </ListItem>
+          <ListItem button noBorder onPress={() => {
+            this.props.navigation.navigate('MyStore')}}>
+            <Left>
+              <Icon active name='cart' style={{ color: "#777", fontSize: 26, width: 30 }} />
+              <Text style={styles.text}>
+                My Store
+              </Text>
+            </Left>
+          </ListItem>
+          <ListItem button noBorder onPress={() => {
+            this.props.navigation.navigate('Notification')}}>
+            <Left>
+              <Icon active name='md-notifications' style={{ color: "#777", fontSize: 26, width: 30 }} />
+              <Text style={styles.text}>
+                Notification
+              </Text>
+            </Left>
+            {
+             this.props.notification.notification + this.props.notification.message !== 0 && <Right style={{ flex: 1 }}>
+                <Badge
+                  style={{
+                    borderRadius: 3,
+                    height: 30,
+                    width: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#FFA000',
+                  }}
+                >
+                  <Text style={styles.badgeText}>{this.props.notification.notification + this.props.notification.message}</Text>
+                </Badge>
+            </Right>
+            }
+          </ListItem>
+          <ListItem button noBorder onPress={() => {
+            this.props.navigation.navigate('Profile')}}>
+            <Left>
+              <Icon active name='contact' style={{ color: "#777", fontSize: 26, width: 30 }} />
+              <Text style={styles.text}>
+                Profile
+              </Text>
+            </Left>
+          </ListItem>
 				</Content>
 			</Container>
 		);
@@ -176,8 +207,8 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   badgeText: {
-    fontSize: Platform.OS === "ios" ? 13 : 11,
-    fontWeight: "400",
+    fontSize: Platform.OS === "ios" ? 20 : 18,
+    fontWeight: "bold",
     textAlign: "center",
     marginTop: Platform.OS === "android" ? -3 : undefined
   }
@@ -185,15 +216,17 @@ const styles = StyleSheet.create({
 function mapStateToProps (state) {
 	return {
 		infouser: state.infouser,
-    firebase: state.fibase
+    notification: state.notification
 	}
 }
 function mapDispatchToProps (dispatch) {
 	return{
-		dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser))
+		dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser)),
+    dispatchUpdateNotificationNumber: (notification) => dispatch(updateNotificationNumber(notification)),
+    dispatchUpdateMessageNumber: (message) => dispatch(updateMessageNumber(message))
 	}
 }
 export default connect(
   mapStateToProps,
 	mapDispatchToProps,
-)(SideBar)
+) (SideBar)

@@ -49,13 +49,16 @@ class NotificationList extends Component {
               }
               if(item.type === 'Message') {
                 ToAPI.getUserInfo(item.sender,(sender) => {
-                  let content={
-                    senderName: sender.displayName,
-                    senderPhoto: sender.photoURL,
-                    senderUid: item.sender,
-                    message: item.content.message,
-                    date: item.date
-                  }
+                  // let content={
+                  //   senderName: sender.displayName,
+                  //   senderPhoto: sender.photoURL,
+                  //   senderUid: item.sender,
+                  //   message: item.content.message,
+                  //   date: item.date
+                  // }
+                  let content = sender
+                  content['message'] = item.content.message
+                  content['date'] = item.date
                   this.props.openMessageBox(true,content)
                 })
               }

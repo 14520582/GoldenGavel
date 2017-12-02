@@ -2,7 +2,6 @@
 
 import React from "react";
 import { DrawerNavigator } from "react-navigation";
-
 import Home from "./components/Home/";
 import Setting from "./components/Setting";
 import Login from "./components/Login";
@@ -23,8 +22,7 @@ const Drawer = DrawerNavigator(
     contentOptions: {
       activeTintColor: "#e91e63"
     },
-    contentComponent: props => <SideBar {...props} />
+    contentComponent: props => <SideBar {...props}/>
   }
 );
-
-export default Drawer;
+export default Drawer
