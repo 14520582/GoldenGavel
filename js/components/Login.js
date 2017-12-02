@@ -122,12 +122,12 @@ class Login extends Component {
 				let userinfo ={
 					displayName: currentUser.displayName,
 					email: currentUser.email,
-					phoneNumber: "09877554333",
+					phoneNumber: "",
 					photoURL: currentUser.photoURL,
 					uid: currentUser.uid,
 					address: "",
-					facebook: "facebook.com/temp",
-					twitter: "twitter.com/temp",
+					facebook: "",
+					twitter: "",
 				}
 				ToAPI.setUserInfo(userinfo)
 				this.props.dispatchInfoUserUpdate(userinfo)
