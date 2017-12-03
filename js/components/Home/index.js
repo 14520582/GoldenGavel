@@ -20,6 +20,7 @@ import {
 import { connect } from 'react-redux'
 import ToAPI from '../../server/ToAPI'
 import DateTime from '../../util/DateTime'
+import Currency from '../../util/Currency'
 import Swiper from 'react-native-swiper';
 import styles from './styles'
 import Category from './Category'
@@ -89,8 +90,8 @@ class Home extends Component {
         </Header>
         <Content>
             {
-              this.state.banner && <Swiper style={styles.wrapper} autoplay={true}>
-                <Image source ={{uri: this.state.banner[0].image}} style={styles.banner}/>
+              this.state.banner && <Swiper style={styles.wrapper} autoplay={true}
+              >
                 <Image source ={{uri: this.state.banner[1].image}} style={styles.banner}/>
                 <Image source ={{uri: this.state.banner[2].image}} style={styles.banner}/>
                 <Image source ={{uri: this.state.banner[3].image}} style={styles.banner}/>
@@ -111,17 +112,6 @@ class Home extends Component {
                 <Text style={styles.viewmore}>SEE ALL</Text>
               </TouchableOpacity>
             </View>//'#FFCA28','#FFD54F','#FFE082','#FFECB3'
-            }
-            {
-            // <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 1}}
-            //   locations={[0,0.4,0.7,1]} colors={gradient} style={styles.headerCategories}>
-            //   <Text style={styles.titleCategories}>Categories</Text>
-            //   <TouchableOpacity
-            //    onPress = { () => this.props.navigation.navigate('Home')}
-            //   >
-            //     <Text style={styles.viewmore}>VIEW MORE</Text>
-            //   </TouchableOpacity>
-            // </LinearGradient>
             }
             <View>
               {
@@ -226,20 +216,20 @@ class Home extends Component {
           </View>
         </View>
         <View style={styles.containernameproduct1}>
-          <Text numberOfLines={2} style={styles.nameproduct1}>{item.name}</Text>
+          <Text numberOfLines={1} style={[styles.nameproduct1, {fontSize: 18}]}>{item.name}</Text>
         </View>
       </Image>
       <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Current Bid:</Text>
-        <Text style={styles.titleCategories}>{item.currentbid + ' đ'}</Text>
+        <Text style={[styles.titleCategories, {color: '#FFA000'}]}>{Currency.convertNumberToCurrency(item.currentbid) + ' đ'}</Text>
       </View>
       <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Bid Increment:</Text>
-        <Text style={styles.titleCategories}>{item.bidincrement + ' đ'}</Text>
+        <Text style={styles.titleCategories}>{Currency.convertNumberToCurrency(item.bidincrement) + ' đ'}</Text>
       </View>
       <View style={styles.rowinfobid1}>
         <Text style={styles.textinfobid}>Starting Bid:</Text>
-        <Text style={styles.titleCategories}>{item.startingbid + ' đ'}</Text>
+        <Text>{Currency.convertNumberToCurrency(item.startingbid) + ' đ'}</Text>
       </View>
       </TouchableOpacity>
     </View>

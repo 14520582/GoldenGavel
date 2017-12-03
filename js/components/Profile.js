@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet,TouchableOpacity,TextInput,Modal} from "react-native";
-import imgPhone from '../assets/call.png'
-import imgChat from '../assets/mess.png'
+import { Platform, Dimensions, StyleSheet, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator} from "react-native";
 import firebase from 'react-native-firebase';
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import ToAPI from '../server/ToAPI'
+import LinearGradient from 'react-native-linear-gradient';
+const deviceHeight = Dimensions.get('window').height;
+const deviceWidth = Dimensions.get('window').width;
+const ImagePicker = require('react-native-image-picker');
 import {
   Container,
   Header,
@@ -28,199 +30,302 @@ import {
   Item as FormItem,
   Thumbnail
 } from "native-base";
-
+const options = {
+  title: 'Option',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images'
+  }
+};
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state ={
       modalVisible: false,
+      name: null,
       phone: null,
       facebook: null,
       twitter: null,
-      address:null
+      address: null,
+      updating: false
     }
   }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+  componentWillMount() {
+    this.setState({
+      name: this.props.infouser.displayName,
+      phone: this.props.infouser.phoneNumber,
+      facebook: this.props.infouser.facebook,
+      twitter: this.props.infouser.twitter,
+      address:this.props.infouser.address,
+    })
   }
-  savedata = () => {
-    if(this.state.phone === null && this.state.address === null){
-      alert("Bạn cần nhập số điện thoại và địa chỉ");
-    } 
+  setModalVisible() {
+    this.setState({
+      modalVisible: true,
+      name: this.props.infouser.displayName,
+      phone: this.props.infouser.phoneNumber,
+      facebook: this.props.infouser.facebook,
+      twitter: this.props.infouser.twitter,
+      address:this.props.infouser.address,
+    })
+  }
+  saveData = () => {
+    if(this.state.phone.trim() === '' || this.state.name.trim() === ''){
+      Alert.alert(null,'Please ensure you filled out name and phone number')
+    }
     else{
-      ToAPI.setPhone(this.props.infouser.uid, this.state.phone)
-      ToAPI.setFacebook(this.props.infouser.uid, this.state.facebook)
-      ToAPI.setTwitter(this.props.infouser.uid, this.state.twitter)
-      ToAPI.setAddress(this.props.infouser.uid, this.state.address)
-      this.setState({modalVisible:false});
+      let userinfo = {
+        displayName: this.state.name,
+        email: this.props.infouser.email,
+        phoneNumber: this.state.phone,
+        photoURL: this.props.infouser.photoURL,
+        uid: this.props.infouser.uid,
+        address: this.state.address,
+        facebook: this.state.facebook,
+        twitter: this.state.twitter,
+      }
+      ToAPI.setUserInfo(userinfo)
+      this.setState({modalVisible:false})
     }
 
   }
+  updateProfilePhoto() {
+    ImagePicker.showImagePicker(options,(response) => {
+      console.log('Response = ', response);
+
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    }
+    else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    }
+    else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+    }
+    else {
+      this.setState({updating: true, modalVisible:false})
+      ToAPI.setProfilePicture(this.props.infouser.uid, response.path, (result) => {
+        if(result){
+         this.setState({updating: false})
+       }
+      })
+    }
+    });
+  }
   render() {
     return (
-      <Container style={styles.container}>
-        <Header noShadow={true} searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
+      <Container pointerEvents={this.state.updating ? 'none' : 'auto'} style={styles.container}>
+        <Header noShadow={true} hasTabs androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              onPress={() => {
+                this.props.navigation.navigate("DrawerOpen")
+              }}
             >
-              <Icon name="menu" />
+              <Icon name="menu"/>
             </Button>
           </Left>
           <Body>
             <Title>Profile</Title>
-          </Body>     
+          </Body>
           <Right>
-          <Button
+            <Button
               transparent
-              onPress={() => this.setState({modalVisible:true})}
+              onPress={() => this.setModalVisible()}
             >
               <Icon name="create" />
             </Button>
           </Right>
         </Header>
-        <View style={styles.header}>
-        <View style = {styles.icon}>
-          <TouchableOpacity transparent >
-          <Thumbnail small source={imgPhone} />
-          </TouchableOpacity>
-          <Thumbnail large style = {styles.avatar} source={{uri: this.props.infouser.photoURL}} />
-          <TouchableOpacity transparent >
-          <Thumbnail small source={imgChat} />
-          </TouchableOpacity>
-        </View>
-        <View>
-        <Text style={{fontSize: 17, color:'#000000'}}>{this.props.infouser.displayName}</Text>
-        </View>
-      </View>
-        <View style={styles.footer}>
-          <List>
-          <ListItem>              
-              <View style = {styles.listItemStyle}>
-                <View style={{ flexDirection: 'row', alignItems:'center'}}>
-                  <Icon style = {{fontSize: 18, color: '#ef5350'}} name="call"/>
-                  <Text style={styles.listItem}>   Phone</Text>
+        <Content>
+        <LinearGradient
+          colors={['#FFA000', '#FFC107', '#FFD54F', '#FFECB3', '#FFFFFF']}
+          style={styles.header}>
+            <Thumbnail style = {styles.avatar} source={{uri: this.props.infouser.photoURL}} />
+            <View>
+              <Text style={{fontSize: 19, color:'#000000', fontWeight: 'bold'}}>{this.props.infouser.displayName}</Text>
+            </View>
+          </LinearGradient>
+          <View style={styles.footer}>
+            <ListItem>
+                <View>
+                  <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                    <Icon style = {{fontSize: 20, color: '#ef5350'}} name="call"/>
+                    <Text style={styles.listItem}>Phone</Text>
+                  </View>
+                  <Text style={styles.infoitem}>{this.props.infouser.phoneNumber}</Text>
                 </View>
-                <Text style={{fontSize: 15, color:'#424242'}}>{this.props.infouser.phoneNumber}</Text>
-              </View>                                 
-            </ListItem>
-            <ListItem>              
-              <View style = {styles.listItemStyle}>              
-                <View style={{ flexDirection: 'row', alignItems:'center'}}>                 
-                    <Icon style = {{fontSize: 18, color: '#F57F17'}} name="mail"/>
-                     <Text style={styles.listItem} >   Email</Text>                                    
-                </View>                                         
-                <Text style={{fontSize: 15, color:'#424242'}}>{this.props.infouser.email}</Text>
-              </View>                         
-            </ListItem>
-            <ListItem>             
-             <View style = {styles.listItemStyle}>
-              <View style={{ flexDirection: 'row', alignItems:'center'}}>
-                <Icon style = {{fontSize: 18, color: '#32CDFD'}} name="logo-twitter"/>
-                <Text style={styles.listItem}>   Twitter</Text>
-              </View>
-                <Text style={{fontSize: 15, color:'#424242'}}>{this.props.infouser.twitter}</Text>
-              </View>                                                 
-            </ListItem>
-            <ListItem>             
-              <View style = {styles.listItemStyle}>
-                <View style={{ flexDirection: 'row', alignItems:'center'}}>
-                  <Icon style = {{fontSize: 17, color: '#3B5998'}} name="logo-facebook"/>
-                  <Text style={styles.listItem}>   Facebook</Text>
+              </ListItem>
+              <ListItem>
+                <View>
+                  <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                      <Icon style = {{fontSize: 20, color: '#FF5722'}} name="mail"/>
+                       <Text style={styles.listItem}>Email</Text>
+                  </View>
+                  <Text style={styles.infoitem}>{this.props.infouser.email}</Text>
                 </View>
-                <Text style={{fontSize: 15, color:'#424242'}}>{this.props.infouser.facebook}</Text>
-              </View>                                                  
-            </ListItem>
-            <ListItem>              
-              <View style = {styles.listItemStyle}>
+              </ListItem>
+              <ListItem>
+               <View>
                 <View style={{ flexDirection: 'row', alignItems:'center'}}>
-                  <Icon style = {{fontSize: 17, color: '#66BB6A'}} name="pin"/>
-                  <Text style={styles.listItem}>   Address</Text>
+                  <Icon style = {{fontSize: 18, color: '#32CDFD'}} name="logo-twitter"/>
+                  <Text style={styles.listItem}>Twitter</Text>
                 </View>
-                <Text style={{fontSize: 15, color:'#424242'}}>{this.props.infouser.address}</Text>
-              </View>                                              
-            </ListItem>
-          </List>
-        </View>
-        <Modal 
+                  <Text style={styles.infoitem}>{this.props.infouser.twitter}</Text>
+                </View>
+              </ListItem>
+              <ListItem>
+                <View>
+                  <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                    <Icon style = {{fontSize: 20, color: '#3B5998', paddingLeft: 2}} name="logo-facebook"/>
+                    <Text style={styles.listItem}>Facebook</Text>
+                  </View>
+                  <Text style={[styles.infoitem, {paddingLeft: 2}]}>{this.props.infouser.facebook}</Text>
+                </View>
+              </ListItem>
+              <ListItem>
+                <View>
+                  <View style={{ flexDirection: 'row', alignItems:'center'}}>
+                    <Icon style = {{fontSize: 20, color: '#66BB6A', paddingLeft: 2}} name="pin"/>
+                    <Text style={styles.listItem}>Address</Text>
+                  </View>
+                  <Text style={[styles.infoitem, {paddingLeft: 2}]}>{this.props.infouser.address}</Text>
+                </View>
+              </ListItem>
+          </View>
+        </Content>
+        <Modal
           animationType="slide"
           transparent={true}
-          visible = {this.state.modalVisible} 
-          onRequestClose={() => {this.setState({modalVisible:false})}}>          
+          visible = {this.state.modalVisible}
+          onRequestClose={() => {this.setState({modalVisible:false})}}>
          <Container style={styles.container}>
-         <Header noShadow={true} searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
-         <Left>
-           <Button
-             transparent
-             onPress={() => {this.setState({modalVisible:false})}}>
-             <Icon name="arrow-back" />
-           </Button>
-         </Left>
-         <Body>
-           <Title>Update Profile</Title>
-         </Body>     
-         <Right/>
-       </Header>
-          <Content>
-            <View style={{flexDirection: 'row', flex: 0.5}}>
-              <TouchableOpacity transparent>
-                <Thumbnail large style = {styles.avatar} source={{uri: this.props.infouser.photoURL}} />  
-              </TouchableOpacity>              
-              <Input style={{ alignSelf:'center', fontSize:17}} placeholder={this.props.infouser.displayName}/>
-            </View>         
+          <Header noShadow={true} searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
+             <Left>
+               <Button
+                 transparent
+                 onPress={() => {this.setState({modalVisible:false})}}>
+                 <Icon name="md-close" />
+               </Button>
+             </Left>
+             <Body>
+               <Title>Update Profile</Title>
+             </Body>
+             <Right>
+               <Button
+                 transparent
+                 onPress={() => {
+                   this.saveData()
+                 }}>
+                 <Icon name="md-checkmark" />
+               </Button>
+             </Right>
+          </Header>
+          <Content keyboardShouldPersistTaps='always'>
+            <View style={{alignItems: 'center',paddingBottom : 8, paddingTop: 8}}>
+              <Thumbnail large style = {styles.avataredit} source={{uri: this.props.infouser.photoURL}}/>
+              <TouchableOpacity onPress={() => {
+                this.updateProfilePhoto()
+              }}>
+                <Text style={{ color:'#0277BD', fontSize:17}}>Change photo</Text>
+              </TouchableOpacity>
+            </View>
             <Form>
               <Item>
-                <Input 
-                  style={{fontSize:15}} 
+                <Icon style = {styles.iconedit} name="contact"/>
+                <Input
+                  style={styles.textedit}
+                  onChangeText={(name) => this.setState({name})}
+                  value={this.state.name}
+                  returnKeyType='next'
+                  autoCorrect={false}
+                  placeholderTextColor = '#9E9E9E'
+                  placeholder="Name" />
+              </Item>
+              <Item>
+                <Icon style = {styles.iconedit} name="call"/>
+                <Input
+                  style={styles.textedit}
                   onChangeText={(phone) => this.setState({phone})}
                   value={this.state.phone}
                   keyboardType='numeric'
                   returnKeyType='next'
+                  autoCorrect={false}
+                  placeholderTextColor = '#9E9E9E'
                   placeholder="Phone" />
               </Item>
               <Item>
-                <Input 
-                  style={{fontSize:15}}
+                <Icon style = {styles.iconedit} name="logo-facebook"/>
+                <Input
+                  style={styles.textedit}
                   onChangeText={(facebook) => this.setState({facebook})}
                   value={this.state.facebook}
-                  returnKeyType='next' 
+                  returnKeyType='next'
+                  autoCorrect={false}
+                  placeholderTextColor = '#9E9E9E'
                   placeholder="Facebook" />
               </Item>
               <Item>
-                <Input 
-                  style={{fontSize:15}}
+                <Icon style = {{fontSize: 18}} name="logo-twitter"/>
+                <Input
+                  style={styles.textedit}
                   onChangeText={(twitter) => this.setState({twitter})}
                   value={this.state.twitter}
-                  returnKeyType='next' 
+                  returnKeyType='next'
+                  autoCorrect={false}
+                  placeholderTextColor = '#9E9E9E'
                   placeholder="Twitter" />
               </Item>
-              <Item last>
-                <Input 
-                  style={{fontSize:15}}
+              <Item>
+                <Icon style = {[styles.iconedit, {paddingLeft: 3}]} name="pin"/>
+                <Input
+                  style={styles.textedit}
                   onChangeText={(address) => this.setState({address})}
                   value={this.state.address}
                   returnKeyType='next'
+                  autoCorrect={false}
+                  placeholderTextColor = '#9E9E9E'
                   placeholder="Address" />
               </Item>
             </Form>
-            <Button style = {styles.saveButton} onPress = {this.savedata}>
-            <Text>Save</Text>
-          </Button>
           </Content>
          </Container>
         </Modal>
+        {
+          this.state.updating && <View style={styles.updating}>
+            <ActivityIndicator size="large"/>
+          </View>
+        }
       </Container>
     );
   }
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FBFAFA"
+    backgroundColor: "white"
+  },
+  updating: {
+    position: 'absolute',
+    top: deviceHeight/2 - 13,
+    left: deviceWidth/2 - 13,
+    alignItems:'center',
+    justifyContent: 'center'
+  },
+  iconedit: {
+    fontSize: 20
+  },
+  textedit:{
+    fontSize: 17
+  },
+  placeholder:{
+    fontStyle: 'italic',
+    fontSize: 17
   },
   header: {
     backgroundColor: "#F5F5F5",
-    flex: 0.7,
+    paddingTop: 20,
+    paddingBottom: 30,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -228,20 +333,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    flex: 0.7,
-    //backgroundColor:'#FF8F00'
   },
   footer: {
-    backgroundColor: "#FBFAFA",
-    flex: 1.5
+    backgroundColor: "#fff",
   },
-  avatar: { 
+  avatar: {
     margin: 10,
-    alignSelf:'center'
+    alignSelf:'center',
+    height: 120,
+    width: 120,
+    borderRadius: 66,
+  },
+  avataredit: {
+    margin: 10,
+    alignSelf:'center',
+    height: 100,
+    width: 100,
+    borderRadius: 55,
+  },
+  infoitem: {
+    fontSize: 17,
+    color:'#424242',
+    paddingTop: 5,
   },
   listItem: {
     fontSize: 17,
-    color: '#000000'
+    paddingLeft: 10,
+    fontStyle: 'italic',
+    color: '#FF6F00'
   },
   listItemStyle: {
     flexDirection: 'column'
@@ -272,4 +391,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 ) (Profile)
-

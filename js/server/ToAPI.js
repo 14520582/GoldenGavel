@@ -25,7 +25,7 @@ class ToAPI {
         callback(false)
     })
   }
-  static setProfilePicture(uid, path){
+  static setProfilePicture(uid, path, callback){
     const metadata = {
       contentType: 'image/jpeg'
     }
@@ -33,7 +33,10 @@ class ToAPI {
       .ref(`User/${uid}`)
       .putFile(path,metadata)
       .then(uploadedFile => {
-        firebase.database().ref().child(`User/${uid}/photoURL`).set(uploadedFile.downloadURL)
+        firebase.database().ref().child(`User/${uid}/photoURL`).set(uploadedFile.downloadURL, (result) => {
+          if(!result)
+            callback(true)
+        })
       })
       .catch(err => {
         //alert(err)

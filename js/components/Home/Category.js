@@ -25,6 +25,7 @@ const deviceHeight = Dimensions.get('window').height;
 import LinearGradient from 'react-native-linear-gradient';
 import ToAPI from '../../server/ToAPI'
 import DateTime from '../../util/DateTime'
+import Currency from '../../util/Currency'
 const gradient = ['#FFA000','#FFCA28','#FFD54F','#FFE082']
 class Category extends Component {
   constructor(props) {
@@ -95,10 +96,10 @@ class Category extends Component {
       }
       <Text numberOfLines={1} style={styles.name}>{item.name}</Text>
       <View style={styles.rowinfobid}>
-        <Text style={styles.currentbid}>{item.currentbid +' đ'}</Text>
+        <Text style={styles.currentbid}>{Currency.convertNumberToCurrency(item.currentbid) +' đ'}</Text>
         <View style={styles.row}>
           <Icon name='md-add-circle' style={styles.bidincrement}/>
-          <Text>{item.bidincrement}</Text>
+          <Text>{Currency.convertNumberToCurrency(item.bidincrement)}</Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -9,7 +9,7 @@ module.exports = StyleSheet.create({
   },
 	name : {
 		paddingLeft: 5,
-		fontSize: 18,
+		fontSize: 20,
 		color: 'black',
 		fontWeight: 'bold'
 	},
@@ -56,8 +56,13 @@ module.exports = StyleSheet.create({
 		paddingRight: 5,
 		paddingLeft: 5,
   },
+ slide: {
+	 flex: 1,
+	 justifyContent: 'center',
+	 backgroundColor: 'transparent'
+ 	},
 	containerByCategory: {
-		height: deviceWidth/2 + 60,
+		height: deviceWidth/2 + 70,
 		width: deviceWidth/2,
 		borderWidth: 0.5,
 		borderColor:'#CFD8DC'
@@ -86,7 +91,7 @@ module.exports = StyleSheet.create({
   },
   containernameproduct1: {
     backgroundColor: 'rgba(0,0,0,0.5)',
-    height: 60,
+    height: 50,
     width: 200,
     justifyContent: 'center'
   },

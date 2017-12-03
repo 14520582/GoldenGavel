@@ -83,7 +83,10 @@ class Notification extends Component {
             <Icon style={styles.iconclose} name='md-close'/>
           </TouchableOpacity>
           <View style={styles.containermessage}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Profile", {anotherUser: this.state.content})}>
+            <TouchableOpacity onPress={() => {
+              this.openMessageBox(false)
+              this.props.navigation.navigate("AnotherProfile", {user: this.state.content})
+            }}>
               <View style={styles.userinfo}>
                 <Thumbnail style={{height: 45, width: 45}} source={this.state.content ? {uri: this.state.content.photoURL} : null} />
                 <Text style={{paddingLeft: 10, fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>{this.state.content ? this.state.content.displayName : ''}</Text>
@@ -97,6 +100,8 @@ class Notification extends Component {
             <Icon style={{paddingLeft: 12, paddingRight: 12, color: '#FFC107', fontSize: 30}} name='md-chatboxes'/>
             <Input style={{height: 50}}
               value={this.state.message}
+              placeholderTextColor = '#9E9E9E'
+              placeholder="Add a message..."
               onChangeText={(text) => {
                 this.setState({message: text})
               }}
