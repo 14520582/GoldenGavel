@@ -106,15 +106,18 @@ class Product extends Component {
         <Content padder>
 			<View style={styles.imagesViewParent}>
 				<View style={styles.imagesView}>
-				<TouchableOpacity 
-						onPress={() => this.setState({modalPicture:true})}
-					>
+				
 					<Image
 					style={{height:deviceHeight*(4/11), width:deviceWidth}}
 					source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
 					resizeMode={'contain'}
-					/>
-				</TouchableOpacity>
+					>
+						<TouchableOpacity style={{height:deviceHeight*(4/11),width:deviceHeight*(4/11), alignSelf:'center'}}
+							onPress={() => this.setState({modalPicture:true})}
+						>
+						</TouchableOpacity>
+					</Image>
+				
 				</View>
 				<View style={styles.subImageViews}>
 					
@@ -322,23 +325,25 @@ class Product extends Component {
 			onRequestClose={() => {this.setState({modalPicture:false})}}
 			>
 			<Container style={styles.container}>
-					<View style={{flex:1,justifyContent: 'center',alignItems: 'center' }}>	
+					<Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000'}}>
+						  <Left style = {{alignSelf: 'center'}}>
+							<Button transparent onPress={() => this.setState({modalPicture:false})}>
+							  <Icon name="arrow-back" />
+							</Button>
+						  </Left>
+						  <Body>
+							<Title >{this.state.pictureIndex +'/'+this.state.product.image.length}</Title>
+						  </Body>
+						  <Right />
+						</Header>
+					<View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}>	
 						<Image
-						style={{height:deviceHeight, width:deviceWidth,alignSelf:'center'}}
+						style={{height:'100%', width:'100%',}}
 						source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
 						resizeMode={'contain'}
 						>
-							<Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000',}}>
-							  <Left style = {{alignSelf: 'center'}}>
-								<Button transparent onPress={() => this.setState({modalPicture:false})}>
-								  <Icon name="arrow-back" />
-								</Button>
-							  </Left>
-							  <Body>
-								<Title >{this.state.pictureIndex +'/'+this.state.product.image.length}</Title>
-							  </Body>
-							  <Right />
-							</Header>
+							
+							
 						</Image>
 					</View>
 			</Container>
