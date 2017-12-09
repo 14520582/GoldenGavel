@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { Platform, StyleSheet,View,Image,TouchableHighlight,Modal,TextInput,Dimensions,FlatList,TouchableOpacity } from "react-native";
+import DateTime from '../util/DateTime'
+import Currency from '../util/Currency'
+import { connect } from 'react-redux'
+import firebase from 'react-native-firebase';
 import {
   Container,
   Header,
@@ -15,6 +19,7 @@ import {
   Toast,
 } from "native-base";
 
+
 var BUTTONS = ["Option 0", "Option 1", "Option 2", "Delete", "Cancel"];
 var DESTRUCTIVE_INDEX = 3;
 var CANCEL_INDEX = 4;
@@ -25,39 +30,43 @@ const paypal = require('../assets/paypal.png')
 const masterCard = require('../assets/mastercard.png')
 const cod = require('../assets/cod.png')
 const visa = require('../assets/visa.png')
+const increase = require('../assets/increase.png')
+const decrease = require('../assets/decrease.png')
 const freeship = require('../assets/shipping.png')
-var product={
-        "bidincrement" : 40000,
-        "category" : "Jewelry",
-        "condition" : "New",
-        "currentbid" : 1200000,
-        "description" : "description",
-        "endtime" : 1515585874660,
-        "image" : [ "https://firebasestorage.googleapis.com/v0/b/goldengavel-5dca5.appspot.com/o/jewelry1.jpg?alt=media&token=436b4a32-d882-4938-9341-f9da83e46bc6", "https://firebasestorage.googleapis.com/v0/b/goldengavel-5dca5.appspot.com/o/jewelry1-0.jpg?alt=media&token=8d72550d-2573-4b96-918c-38a4941b0c3e", "https://firebasestorage.googleapis.com/v0/b/goldengavel-5dca5.appspot.com/o/jewelry1-1.jpg?alt=media&token=3834271b-479a-46ab-9784-fafa9e98b1a0", "https://firebasestorage.googleapis.com/v0/b/goldengavel-5dca5.appspot.com/o/jewelry1-2.jpg?alt=media&token=d65d42ab-71e4-4302-a24f-6830885ec96e" ],
-        "name" : "N40.5326992738992",
-        "numberofbid" : 4,
-        "owner" : "RtkcoKBxk1cJMycPK3o4ssa1IGw2",
-        "payment" : [ "MasterCard", "PayPal", "Visa" ],
-        "shipping" : "Free",
-        "startingbid" : 400000,
-        "starttime" : 1510240274660
-      }
 var bidder=[{name: 'ngan1111111111111111111111111',  bids:1000000000000}, {name: 'ngan2',  bids:200}, {name: 'ngan3',  bids:300}]
-export default class Product extends Component {
+class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
-		picture : product.image[1],
+		product:{
+        "bidincrement" : 0,
+        "category" : "",
+        "condition" : "",
+        "currentbid" : 0,
+        "description" : "",
+        "endtime" : 0,
+        "image" : [  ],
+        "name" : "",
+        "numberofbid" : 0,
+        "owner" : "0",
+        "payment" : [],
+        "shipping" : "0",
+        "startingbid" : 0,
+        "starttime" : 0
+      },
+		pictureIndex: 1, 
 		modalVisible: false,
+		modalPicture:false,
 		bid : 0,
+		productID : this.props.navigation.state.params.product.key,
+		productCategory : this.props.navigation.state.params.product.category,
 		
 		
 	 };
-	 this.setPicture=this.setPicture.bind(this);
   }
   componentWillMount(){
-    ToAPI.getItem('-KyWKPsOwPOsRkJzy1_F',(item) =>{
-		 alert('Start')
+    ToAPI.getItem(this.state.productID.toString(),this.state.productCategory.toString(),(item) =>{
+		 this.setState({product:item, pictureIndex : 1, bid : item.currentbid})
     })
   }
 
@@ -71,47 +80,12 @@ export default class Product extends Component {
 	return date.getDate().toString()+ '-'+ (date.getMonth()+1).toString()+'-'+ date.getFullYear().toString();
   }
   
-  distanceTime(end){
-	  var today = new Date();
-	  time = (end - today)/1000;
-	  day = 0
-	  hour = 0
-	  minute = 0
-	  second = Math.floor(time%60)
-	  minute = Math.floor(time/60)
-	  if(minute >=60){
-		  hour=Math.floor(minute/60);
-		  minute=minute%60;
-			if(hour>=24){
-				day=Math.floor(hour/24);
-				hour=hour%24				
-			}
-		}
-		stringHour = hour.toString()
-		stringMinute = minute.toString()
-		stringSecond = second.toString()
-		if(hour < 10) stringHour = '0'+hour
-		if(minute < 10) stringMinute = '0'+ minute
-		if(second < 10) stringSecond = '0'+second
-	  stringTime = ''
-		if(Math.floor(hour/24)> 1) {stringTime = Math.floor(hour/24)+ ' Days ' + stringHour + ':' +stringMinute+ ':' +stringSecond;}
-		else{
-			if (Math.floor(hour/24)== 1)  {stringTime = Math.floor(hour/24)+' Day '  + stringHour + ':' +stringMinute+ ':' +stringSecond;}
-			else {stringTime =  + stringHour + ':' +stringMinute+ ':' +stringSecond;}
-		}
-	  return stringTime;
-  }
-  
   
   checkPayMethod(method){
-	  return product.payment.indexOf(method)
+	  return this.state.product.payment.indexOf(method)
 	  
   }
   
-  setPicture(uri){
-	  this.setState({picture:uri})
-	  return
-  }
   
 
   
@@ -132,72 +106,117 @@ export default class Product extends Component {
         <Content padder>
 			<View style={styles.imagesViewParent}>
 				<View style={styles.imagesView}>
+				<TouchableOpacity 
+						onPress={() => this.setState({modalPicture:true})}
+					>
 					<Image
-					style={{height:deviceHeight*(4/11), width:deviceWidth-deviceWidth*10/100}}
-					source={{uri: this.state.picture}}
+					style={{height:deviceHeight*(4/11), width:deviceWidth}}
+					source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
 					resizeMode={'contain'}
 					/>
+				</TouchableOpacity>
 				</View>
 				<View style={styles.subImageViews}>
 					
 					<TouchableOpacity style={styles.smallImage}
-						onPress={() => this.setPicture(product.image[1])}
+						onPress={() => this.setState({pictureIndex:1})}
 					>
-						<Image style = {styles.smallImage} source={{uri: product.image[1]}}/>
+						<Image style = {styles.smallImage} source={{uri: this.state.product.image[0]}}/>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.smallImage}
-						onPress={() => this.setPicture(product.image[2])}
-					>
-						<Image style = {styles.smallImage} source={{uri: product.image[2]}}/>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.smallImage}
-						onPress={() => this.setPicture(product.image[3])}
-					>
-						<Image style = {styles.smallImage} source={{uri: product.image[3]}}/>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.smallImage}
-						onPress={() => this.setPicture(product.image[4])}
-					>
-						<Image style = {styles.smallImage} source={{uri: product.image[4]}}/>
-					</TouchableOpacity>
+					{this.state.product.image[1] &&
+						<TouchableOpacity style={styles.smallImage}
+							onPress={() => this.setState({pictureIndex:2})}
+						>
+							<Image style = {styles.smallImage} source={{uri: this.state.product.image[1]}}/>
+						</TouchableOpacity>
+					}
+					{this.state.product.image[2] &&
+						<TouchableOpacity style={styles.smallImage}
+							onPress={() => this.setState({pictureIndex:3})}
+						>
+							<Image style = {styles.smallImage} source={{uri: this.state.product.image[2]}}/>
+						</TouchableOpacity>
+					}
+					{this.state.product.image[3] &&
+						<TouchableOpacity style={styles.smallImage}
+							onPress={() => this.setState({pictureIndex:4})}
+						>
+							<Image style = {styles.smallImage} source={{uri: this.state.product.image[3]}}/>
+						</TouchableOpacity>
+					}
 					
 				</View>
 			</View>
-			<Text numberOfLines={2} style={styles.nameProduct}>{product.name}</Text>
-			<Text style={styles.textBid}>{'Current bid: $'+(product.currentbid).toString()}</Text>
-			<View style = {styles.viewButton}>
-				<Button
-					onPress={() =>
-							alert(JSON.stringify(product))
+			<Text numberOfLines={2} style={styles.nameProduct}>{this.state.product.name}</Text>
+			<Text style={styles.textBid}>{'Current bid: '+ Currency.convertNumberToCurrency(this.state.product.currentbid)+ ' VNĐ'}</Text>
+			{this.props.infouser.uid != this.state.product.owner &&
+				<View style = {styles.viewButton}>
+					<Button
+						onPress={() =>
+								alert(JSON.stringify(this.state.product))
+								}
+						 style={{backgroundColor: '#F9A825', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
+					  >
+						<Text style={{fontSize:15, color: '#FAFAFA',justifyContent: 'center',alignContent: 'center',alignItems: 'center'}}>{'Buy Now'}</Text>
+					</Button>
+					<Button
+						onPress={() =>
+							this.setState({modalVisible:true})
 							}
-					 style={{backgroundColor: '#F9A825', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
-				  >
-					<Text style={{fontSize:15, color: '#FAFAFA',justifyContent: 'center',alignContent: 'center',alignItems: 'center'}}>{'Buy Now'}</Text>
-				</Button>
-				<Button
-					onPress={() =>
-						this.setState({modalVisible:true})
-						}
-					style={{backgroundColor: '#F4511E', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
-				  >
-					<Text style={{fontSize:15,color: '#FAFAFA' ,justifyContent: 'center',alignContent: 'center'}}>{'BID NOW'}</Text>
-				</Button>
-			</View>
+						style={{backgroundColor: '#F4511E', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
+					  >
+						<Text style={{fontSize:15,color: '#FAFAFA' ,justifyContent: 'center',alignContent: 'center'}}>{'BID NOW'}</Text>
+					</Button>
+				</View>
+			}
+				{this.props.infouser.uid  == this.state.product.owner &&
+					<View style = {styles.viewButton}>
+						<Button
+							onPress={() =>
+									alert(JSON.stringify(this.state.product))
+									}
+							 style={{backgroundColor: '#F9A825', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
+						  >
+							<Text style={{fontSize:15, color: '#FAFAFA',justifyContent: 'center',alignContent: 'center',alignItems: 'center'}}>{'End Now'}</Text>
+						</Button>
+					</View>
+				}
+			
 			<View style={styles.viewInfo} >
 				
-				<View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
-					<Text style={styles.textInfo}>{'Start time: '+this.convertDate2String(product.starttime)}</Text>
-					<Text style={styles.textInfo}>{this.distanceTime(product.endtime)}</Text>
+				<View style={{flexDirection: 'row',justifyContent: 'space-between',marginTop:deviceWidth*2/100}}>
+					<View style = {{flexDirection: 'row',}}>
+						<Text style={styles.textTitle}>{'Start time: '}</Text>
+						<Text style={styles.textInfo}>{this.convertDate2String(this.state.product.starttime)}</Text>
+					</View>
+					<Text style={styles.textInfo}>{DateTime.convertToStringTime(this.state.product.endtime)}</Text>
 				</View>
-				<Text style={styles.textInfo}>{'Description: '+product.description}</Text>
-				<Text style={styles.textInfo}>{'Seller: '+product.owner}</Text>
-				<Text style={styles.textInfo}>{'Condition: '+product.condition}</Text>
+				<View style = {{flexDirection: 'row'}}>
+					<Text style={styles.textTitle}>{'Description: '}</Text>
+					<Text style={styles.textInfo}>{this.state.product.description}</Text>
+				</View>
+				<View style = {{flexDirection: 'row'}}>
+					<Text style={styles.textTitle}>{'Seller: '}</Text>
+					<Text style={styles.textInfo}>{this.state.product.owner}</Text>
+				</View>
+				<View style = {{flexDirection: 'row'}}>
+					<Text style={styles.textTitle}>{'Condition: '}</Text>
+					<Text style={styles.textInfo}>{this.state.product.condition}</Text>
+				</View>
 				<View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
-					<Text style={styles.textInfo}>{'Start bid: '+product.startingbid}</Text>
-					<Text style={styles.textInfo}>{'Bid increament: '+product.bidincrement}</Text>
+					<View style = {{flexDirection: 'row'}}>
+						<Text style={styles.textTitle}>{'Start bid: '}</Text>
+						<Text style={styles.textInfo}>{Currency.convertNumberToCurrency(this.state.product.startingbid) + ' Đ'}</Text>
+					</View>
+					<View style = {{flexDirection: 'row'}}>
+						<Text style={styles.textTitle}>{'Bid increament: '}</Text>
+						<Text style={styles.textInfo}>{Currency.convertNumberToCurrency(this.state.product.bidincrement) + ' Đ'}</Text>
+					</View>
 				</View>
 				<View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-					<Text style={styles.textInfo}>{'Payment: '}</Text>
+					<View style = {{alignSelf: 'center'}}>
+						<Text style={styles.textTitle}>{'Payment: '}</Text>
+					</View>
 					<Image
 						style={styl=styles.imagePayment}
 						source={ (this.checkPayMethod('PayPal') != -1) ? paypal : null}
@@ -216,13 +235,15 @@ export default class Product extends Component {
 					/>
 					<Image
 						style={styl=styles.imagePayment}
-						source={ (product.shipping == 'Free') ? freeship : null}
+						source={ (this.state.product.shipping == 'Free') ? freeship : null}
 					/>
 		
 				</View>
 			</View>
-			
-			<Text style={{marginLeft:deviceWidth*5/100, fontWeight:'bold'}}>{'Number of bid: ' +(product.numberofbid).toString()}</Text>
+			<View style = {{flexDirection: 'row',marginTop: deviceWidth*1/100, marginLeft: deviceWidth*3/100}}>
+				<Text style={styles.textTitle}>{'Number of bid: '}</Text>
+				<Text style={styles.textInfo}>{(this.state.product.numberofbid).toString()}</Text>
+			</View>
 			<View style={{marginLeft:deviceWidth*5/100,marginRight:deviceWidth*5/100}}>
 				<View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1}}>
 					<Text style={{ width: deviceWidth/5}} numberOfLines={1}>{'No.'}</Text>
@@ -248,27 +269,43 @@ export default class Product extends Component {
 			visible={this.state.modalVisible}
 			onRequestClose={() => {this.setState({modalVisible:false})}}
 			>
-			<View style={{ justifyContent: 'center', alignItems:'center',alignContent: 'center',marginLeft: deviceWidth*10/100,marginRight: deviceWidth*10/100,alignSelf:'center',flex:1}}>
-				<View style={{height: deviceHeight/3,backgroundColor: '#FFE0B2',alignSelf:'center'}}>
+			<View style={{ justifyContent: 'center', alignItems:'center',alignContent: 'center',alignSelf:'center',flex:1}}>
+				<View style={{height: deviceHeight*2/5,width: deviceWidth*94/100,backgroundColor: '#FFFFFF',alignSelf:'center', borderWidth:1}}>
+					<TouchableOpacity style = {{alignSelf: 'flex-end', marginRight: deviceWidth*3/100, marginTop: deviceWidth*2/100}}
+						onPress={() =>
+						this.setState({modalVisible:false})
+						}>
+						<Text>{'X'}</Text>
+					</TouchableOpacity>
 					<View style = {{marginTop: 20,}}>
-						<Text style={styles.lableModal}>{'Enter your bid:'}</Text>
-						<View style={{flexDirection:'row', marginRight: deviceWidth*10/100,marginLeft: deviceWidth*10/100,}}>
-						<TextInput style = {styles.textModal}
-								keyboardType = 'numeric'
-								//value={this.state.currentBid.toString()}
-								onChangeText = {(bid) => this.setState({bid})}
-							/>
-							<Text style={{fontSize: 20,color: '#f44336',fontWeight: 'bold',alignSelf:'flex-end'}}>{this.state.bid <= product.currentbid ? '*': null}</Text>
+						<Text style={styles.lableModal}>{'Your bid:'}</Text>
+						<View style={{flexDirection:'row', marginRight: deviceWidth*20/100,marginLeft: deviceWidth*20/100,justifyContent:'space-between',marginTop:15}}>
+							<Text style={{fontSize: 25,color: '#f44336',fontWeight: 'bold',alignSelf:'flex-start'}}>{Currency.convertNumberToCurrency(this.state.bid) + ' VNĐ'}</Text>
+							<View style={{alignSelf:'flex-end', }}>
+												
+								<TouchableOpacity style={styles.imageUpDown}
+									onPress={() => this.setState({bid: this.state.bid+this.state.product.bidincrement})}
+								>
+									<Image style = {styles.imageUpDown} source={increase}/>
+								</TouchableOpacity>
+								
+								<TouchableOpacity style={styles.imageUpDown}
+									onPress={() => this.setState({bid: this.state.bid > this.state.product.currentbid ? this.state.bid-this.state.product.bidincrement:this.state.product.currentbid})}
+								>
+									<Image style = {styles.imageUpDown} source={decrease}/>
+								</TouchableOpacity>
+								
+							</View>
 						</View>
 					</View>
 					<View style = {{marginTop: 20,flexDirection:'row'}}>
-						<Text style={styles.lableModal}>{'Last bid:'}</Text>
-						<Text style = {styles.textModal}>{'$'+product.currentbid}</Text>		
+						<Text style={styles.lableModal}>{'Current bid:'}</Text>
+						<Text style = {styles.textModal}>{Currency.convertNumberToCurrency(this.state.product.currentbid) + ' VNĐ'}</Text>		
 					</View>
 					<View style={styles.viewButton}>
 						<Button
 							onPress={() =>
-								this.state.bid > product.currentbid ? this.setState({modalVisible:false,}) : Toast.show({text: 'Your bid is invalid. Please re-enter!',position: 'bottom',duration: 4000})
+								this.state.bid >this.state.product.currentbid ? this.setState({modalVisible:false,}) : Toast.show({text: 'Your bid is invalid. Please re-enter!',position: 'bottom',duration: 4000})
 							 }
 							 style={{backgroundColor: '#F4511E', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center',alignSelf:'center'}}
 						  >
@@ -277,6 +314,34 @@ export default class Product extends Component {
 					</View>
 				</View>
 			</View>
+		</Modal>
+		<Modal
+			animationType="slide"
+			transparent={true}
+			visible={this.state.modalPicture}
+			onRequestClose={() => {this.setState({modalPicture:false})}}
+			>
+			<Container style={styles.container}>
+					<View style={{flex:1,justifyContent: 'center',alignItems: 'center' }}>	
+						<Image
+						style={{height:deviceHeight, width:deviceWidth,alignSelf:'center'}}
+						source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
+						resizeMode={'contain'}
+						>
+							<Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000',}}>
+							  <Left style = {{alignSelf: 'center'}}>
+								<Button transparent onPress={() => this.setState({modalPicture:false})}>
+								  <Icon name="arrow-back" />
+								</Button>
+							  </Left>
+							  <Body>
+								<Title >{this.state.pictureIndex +'/'+this.state.product.image.length}</Title>
+							  </Body>
+							  <Right />
+							</Header>
+						</Image>
+					</View>
+			</Container>
 		</Modal>
       </Container>
 
@@ -295,7 +360,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FBFAFA"
   },
 	nameProduct: {
-	fontSize:18,
+	fontSize:20,
 	fontWeight:'bold',
 	color: '#212121',
 	marginTop: deviceWidth*5/100,
@@ -317,8 +382,9 @@ const styles = StyleSheet.create({
 	alignContent: 'center',
 	alignItems: 'center', 
 	position: 'absolute',
-	marginRight: deviceWidth*5/100,
-	marginRight: deviceWidth*3/100,
+	alignSelf:'center',
+	height: deviceWidth,
+	width: deviceWidth
 
 
 	},
@@ -328,18 +394,27 @@ const styles = StyleSheet.create({
 	alignItems: 'center',
 	alignSelf: 'flex-end',
 	flexDirection:'row',
-	marginTop: 	deviceHeight*(4/11) -(deviceWidth-deviceWidth*2/11)/7,
+	marginTop: 	deviceHeight*(4/11),
 	width:(deviceWidth-deviceHeight*10/11)/7,
+	
 	},
 	smallImage:{
 		height:(deviceWidth-deviceHeight*2/11)/7, 
 		width:(deviceWidth-deviceHeight*2/11)/7,
+		borderColor: '#FFA500',
+		borderWidth: 1,
+		
+	},
+	imageUpDown:{
+		height:(deviceWidth-deviceHeight*2/11)/15, 
+		width:(deviceWidth-deviceHeight*2/11)/15,
+		
 	},
 	
 	viewInfo: {
 		marginTop: deviceWidth*5/100,
-		marginLeft: deviceWidth*5/100,
-		marginRight: deviceWidth*5/100,
+		marginLeft: deviceWidth*3/100,
+		marginRight: deviceWidth*3/100,
 		borderColor: '#607D8B',
 		borderTopWidth: 1,
 		borderBottomWidth:1,
@@ -347,18 +422,28 @@ const styles = StyleSheet.create({
 	},
 	
 	textBid:{
-		marginTop: deviceWidth*5/100,
+		marginTop: deviceWidth*3/100,
 		fontSize: 20,
 		color: '#f44336',
 		fontWeight: 'bold',
 		alignSelf:'center',
 	},
 	textInfo:{
-		fontSize: 15,
-		color: '#757575'
+		fontSize: 17,
+		fontWeight: 'bold',
+		marginRight: deviceWidth*2/100,
+	
+	},
+	textTitle:{
+		fontSize: 17,
+		color: '#757575',
+		fontStyle: 'italic',
+		marginLeft: deviceWidth*2/100,
 	},
 	
+	
 	imagePayment:{
+		alignSelf: 'center',
 		height:(deviceWidth-deviceHeight*2/11)/8,
 		width:(deviceWidth-deviceHeight*2/11)/8,	
 		marginLeft: deviceWidth*3/100, 
@@ -374,16 +459,30 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	lableModal:{
-		fontSize:15,
+		fontSize:17,
 		color: '#212121',
 		paddingLeft:30, 
 			
 	},
 	textModal:{
-		fontSize:15,
+		fontSize:17,
 		paddingLeft:deviceWidth*5/100,
 		fontWeight:'bold',	
 		width: deviceWidth*60/100
 	},
 
 });
+function mapStateToProps (state) {
+	return {
+		infouser: state.infouser,
+	}
+}
+function mapDispatchToProps (dispatch) {
+	return{
+		dispatchInfoUserUpdate: (infouser) => dispatch(infoUserUpdate(infouser)),
+	}
+}
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(Product)
