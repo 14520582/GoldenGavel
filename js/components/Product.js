@@ -54,41 +54,32 @@ class Product extends Component {
         "startingbid" : 0,
         "starttime" : 0
       },
-		pictureIndex: 1, 
+		pictureIndex: 0,
 		modalVisible: false,
 		modalPicture:false,
 		bid : 0,
 		productID : this.props.navigation.state.params.product.key,
 		productCategory : this.props.navigation.state.params.product.category,
-		
-		
+
+
 	 };
   }
   componentWillMount(){
     ToAPI.getItem(this.state.productID.toString(),this.state.productCategory.toString(),(item) =>{
-		 this.setState({product:item, pictureIndex : 1, bid : item.currentbid})
+		 this.setState({product:item, bid : item.currentbid})
     })
   }
-
-  
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
-  
   convertDate2String(miliSecond){
-	var date = new Date(miliSecond);
-	return date.getDate().toString()+ '-'+ (date.getMonth()+1).toString()+'-'+ date.getFullYear().toString();
+  	var date = new Date(miliSecond);
+  	return date.getDate().toString()+ '-'+ (date.getMonth()+1).toString()+'-'+ date.getFullYear().toString();
   }
-  
-  
   checkPayMethod(method){
 	  return this.state.product.payment.indexOf(method)
-	  
-  }
-  
-  
 
-  
+  }
   render() {
     return (
       <Container style={styles.container}>
@@ -103,49 +94,44 @@ class Product extends Component {
           </Body>
           <Right />
         </Header>
-        <Content padder>
+        <Content>
 			<View style={styles.imagesViewParent}>
-				<View style={styles.imagesView}>
-				<TouchableOpacity 
-						onPress={() => this.setState({modalPicture:true})}
-					>
-					<Image
-					style={{height:deviceHeight*(4/11), width:deviceWidth}}
-					source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
-					resizeMode={'contain'}
-					/>
-				</TouchableOpacity>
-				</View>
-				<View style={styles.subImageViews}>
-					
-					<TouchableOpacity style={styles.smallImage}
-						onPress={() => this.setState({pictureIndex:1})}
-					>
-						<Image style = {styles.smallImage} source={{uri: this.state.product.image[0]}}/>
-					</TouchableOpacity>
-					{this.state.product.image[1] &&
-						<TouchableOpacity style={styles.smallImage}
-							onPress={() => this.setState({pictureIndex:2})}
-						>
-							<Image style = {styles.smallImage} source={{uri: this.state.product.image[1]}}/>
-						</TouchableOpacity>
-					}
-					{this.state.product.image[2] &&
-						<TouchableOpacity style={styles.smallImage}
-							onPress={() => this.setState({pictureIndex:3})}
-						>
-							<Image style = {styles.smallImage} source={{uri: this.state.product.image[2]}}/>
-						</TouchableOpacity>
-					}
-					{this.state.product.image[3] &&
-						<TouchableOpacity style={styles.smallImage}
-							onPress={() => this.setState({pictureIndex:4})}
-						>
-							<Image style = {styles.smallImage} source={{uri: this.state.product.image[3]}}/>
-						</TouchableOpacity>
-					}
-					
-				</View>
+  				<TouchableOpacity
+  						onPress={() => this.setState({modalPicture:true})}
+  					>
+  					<Image
+  					style={styles.imagesView}
+  					source={{uri: this.state.product.image[this.state.pictureIndex]}}
+  					/>
+  				</TouchableOpacity>
+          <View style={styles.besideImageView}>
+            <TouchableOpacity
+            onPress={() => this.setState({pictureIndex:0})}
+            >
+            <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 0 ? 0.3 : 1}]} source={{uri: this.state.product.image[0]}}/>
+            </TouchableOpacity>
+            {this.state.product.image[1] &&
+            <TouchableOpacity
+              onPress={() => this.setState({pictureIndex:1})}
+            >
+              <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 1 ? 0.3 : 1}]} source={{uri: this.state.product.image[1]}}/>
+            </TouchableOpacity>
+            }
+            {this.state.product.image[2] &&
+            <TouchableOpacity
+              onPress={() => this.setState({pictureIndex:2})}
+            >
+              <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 2 ? 0.3 : 1}]} source={{uri: this.state.product.image[2]}}/>
+            </TouchableOpacity>
+            }
+            {this.state.product.image[3] &&
+            <TouchableOpacity
+              onPress={() => this.setState({pictureIndex:3})}
+            >
+              <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 3 ? 0.3 : 1}]} source={{uri: this.state.product.image[3]}}/>
+            </TouchableOpacity>
+            }
+          </View>
 			</View>
 			<Text numberOfLines={2} style={styles.nameProduct}>{this.state.product.name}</Text>
 			<Text style={styles.textBid}>{'Current bid: '+ Currency.convertNumberToCurrency(this.state.product.currentbid)+ ' VNĐ'}</Text>
@@ -181,9 +167,9 @@ class Product extends Component {
 						</Button>
 					</View>
 				}
-			
+
 			<View style={styles.viewInfo} >
-				
+
 				<View style={{flexDirection: 'row',justifyContent: 'space-between',marginTop:deviceWidth*2/100}}>
 					<View style = {{flexDirection: 'row',}}>
 						<Text style={styles.textTitle}>{'Start time: '}</Text>
@@ -237,7 +223,7 @@ class Product extends Component {
 						style={styl=styles.imagePayment}
 						source={ (this.state.product.shipping == 'Free') ? freeship : null}
 					/>
-		
+
 				</View>
 			</View>
 			<View style = {{flexDirection: 'row',marginTop: deviceWidth*1/100, marginLeft: deviceWidth*3/100}}>
@@ -255,12 +241,12 @@ class Product extends Component {
 					numColumns={1}
 					keyExtractor={(item,index) => item.name}
 					renderItem={this._renderItem}
-					
+
 				/>
 			</View>
 			<View style={{height: deviceHeight*10/100}}>
 			</View>
-			
+
         </Content>
 
 		<Modal
@@ -282,25 +268,25 @@ class Product extends Component {
 						<View style={{flexDirection:'row', marginRight: deviceWidth*20/100,marginLeft: deviceWidth*20/100,justifyContent:'space-between',marginTop:15}}>
 							<Text style={{fontSize: 25,color: '#f44336',fontWeight: 'bold',alignSelf:'flex-start'}}>{Currency.convertNumberToCurrency(this.state.bid) + ' VNĐ'}</Text>
 							<View style={{alignSelf:'flex-end', }}>
-												
+
 								<TouchableOpacity style={styles.imageUpDown}
 									onPress={() => this.setState({bid: this.state.bid+this.state.product.bidincrement})}
 								>
 									<Image style = {styles.imageUpDown} source={increase}/>
 								</TouchableOpacity>
-								
+
 								<TouchableOpacity style={styles.imageUpDown}
 									onPress={() => this.setState({bid: this.state.bid > this.state.product.currentbid ? this.state.bid-this.state.product.bidincrement:this.state.product.currentbid})}
 								>
 									<Image style = {styles.imageUpDown} source={decrease}/>
 								</TouchableOpacity>
-								
+
 							</View>
 						</View>
 					</View>
 					<View style = {{marginTop: 20,flexDirection:'row'}}>
 						<Text style={styles.lableModal}>{'Current bid:'}</Text>
-						<Text style = {styles.textModal}>{Currency.convertNumberToCurrency(this.state.product.currentbid) + ' VNĐ'}</Text>		
+						<Text style = {styles.textModal}>{Currency.convertNumberToCurrency(this.state.product.currentbid) + ' VNĐ'}</Text>
 					</View>
 					<View style={styles.viewButton}>
 						<Button
@@ -321,27 +307,24 @@ class Product extends Component {
 			visible={this.state.modalPicture}
 			onRequestClose={() => {this.setState({modalPicture:false})}}
 			>
-			<Container style={styles.container}>
-					<View style={{flex:1,justifyContent: 'center',alignItems: 'center' }}>	
+					<View style={{flex:1,backgroundColor: "#FBFAFA"}}>
 						<Image
-						style={{height:deviceHeight, width:deviceWidth,alignSelf:'center'}}
-						source={{uri: this.state.product.image[this.state.pictureIndex-1]}}
-						resizeMode={'contain'}
+						style={{flex: 1,resizeMode: 'contain'}}
+						source={{uri: this.state.product.image[this.state.pictureIndex]}}
 						>
-							<Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000',}}>
-							  <Left style = {{alignSelf: 'center'}}>
-								<Button transparent onPress={() => this.setState({modalPicture:false})}>
-								  <Icon name="arrow-back" />
-								</Button>
-							  </Left>
-							  <Body>
-								<Title >{this.state.pictureIndex +'/'+this.state.product.image.length}</Title>
-							  </Body>
-							  <Right />
-							</Header>
+            <Header searchBar rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: 'rgba(255, 160, 0,0.9)'}}>
+              <Left>
+                <Button transparent onPress={() => this.setState({modalPicture:false})}>
+                  <Icon name="arrow-back" />
+                </Button>
+              </Left>
+              <Body>
+                <Title>{this.state.pictureIndex + 1}/{this.state.product.image.length}</Title>
+              </Body>
+              <Right />
+            </Header>
 						</Image>
 					</View>
-			</Container>
 		</Modal>
       </Container>
 
@@ -370,47 +353,43 @@ const styles = StyleSheet.create({
 
 	},
 	imagesViewParent:{
-	justifyContent: 'center',
-	alignContent: 'center',
-	alignItems: 'center',	
-	flexDirection: 'row',
-
-
+  	justifyContent: 'center',
+  	alignContent: 'center',
+  	alignItems: 'center',
+  	flexDirection: 'row',
 	},
 	imagesView:{
-	justifyContent: 'center',
-	alignContent: 'center',
-	alignItems: 'center', 
-	position: 'absolute',
-	alignSelf:'center',
-	height: deviceWidth,
-	width: deviceWidth
-
-
+    resizeMode: 'stretch',
+    height: deviceWidth/4*3,
+    width: deviceWidth/4*3,
+    position: "relative",
 	},
+  besideImageView: {
+    width: deviceWidth/4,
+    height: deviceWidth/4*3,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 	subImageViews:{
-	justifyContent: 'space-between',
-	alignContent: 'center',
-	alignItems: 'center',
-	alignSelf: 'flex-end',
-	flexDirection:'row',
-	marginTop: 	deviceHeight*(4/11),
-	width:(deviceWidth-deviceHeight*10/11)/7,
-	
+  	justifyContent: 'space-between',
+  	alignContent: 'center',
+  	alignItems: 'center',
+  	alignSelf: 'flex-end',
+  	flexDirection:'row',
+  	marginTop: 	deviceHeight*(4/11),
+  	width:(deviceWidth-deviceHeight*10/11)/7,
+
 	},
 	smallImage:{
-		height:(deviceWidth-deviceHeight*2/11)/7, 
-		width:(deviceWidth-deviceHeight*2/11)/7,
-		borderColor: '#FFA500',
-		borderWidth: 1,
-		
+		height: (deviceWidth/4*3)/4,
+		width: (deviceWidth/4*3)/4,
 	},
 	imageUpDown:{
-		height:(deviceWidth-deviceHeight*2/11)/15, 
+		height:(deviceWidth-deviceHeight*2/11)/15,
 		width:(deviceWidth-deviceHeight*2/11)/15,
-		
+
 	},
-	
+
 	viewInfo: {
 		marginTop: deviceWidth*5/100,
 		marginLeft: deviceWidth*3/100,
@@ -418,9 +397,9 @@ const styles = StyleSheet.create({
 		borderColor: '#607D8B',
 		borderTopWidth: 1,
 		borderBottomWidth:1,
-		
+
 	},
-	
+
 	textBid:{
 		marginTop: deviceWidth*3/100,
 		fontSize: 20,
@@ -432,7 +411,7 @@ const styles = StyleSheet.create({
 		fontSize: 17,
 		fontWeight: 'bold',
 		marginRight: deviceWidth*2/100,
-	
+
 	},
 	textTitle:{
 		fontSize: 17,
@@ -440,13 +419,11 @@ const styles = StyleSheet.create({
 		fontStyle: 'italic',
 		marginLeft: deviceWidth*2/100,
 	},
-	
-	
 	imagePayment:{
 		alignSelf: 'center',
 		height:(deviceWidth-deviceHeight*2/11)/8,
-		width:(deviceWidth-deviceHeight*2/11)/8,	
-		marginLeft: deviceWidth*3/100, 
+		width:(deviceWidth-deviceHeight*2/11)/8,
+		marginLeft: deviceWidth*3/100,
 		resizeMode: 'contain'
 	},
 	viewButton:{
@@ -461,13 +438,13 @@ const styles = StyleSheet.create({
 	lableModal:{
 		fontSize:17,
 		color: '#212121',
-		paddingLeft:30, 
-			
+		paddingLeft:30,
+
 	},
 	textModal:{
 		fontSize:17,
 		paddingLeft:deviceWidth*5/100,
-		fontWeight:'bold',	
+		fontWeight:'bold',
 		width: deviceWidth*60/100
 	},
 
