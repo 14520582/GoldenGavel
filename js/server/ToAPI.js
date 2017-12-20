@@ -50,6 +50,7 @@ class ToAPI {
     ToAPI.getCurrentBid(product.key,product.category,(currentbid) => {
           if(bid > currentbid){
             firebase.database().ref().child(`Product/${product.category}/${product.key}/currentbid`).set(bid)
+			firebase.database().ref().child(`Product/${product.category}/${product.key}/numberofbid`).set(numberofbid)
             let now = new Date()
             let details = {
               uid: uid,
