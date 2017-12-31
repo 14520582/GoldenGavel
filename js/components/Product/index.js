@@ -68,6 +68,7 @@ class Product extends Component {
 		productID : this.props.navigation.state.params.product.key,
 		productCategory : this.props.navigation.state.params.product.category,
     seller: null,
+    isEnded: false,
 	 };
   }
   _onChangeTab = ({i, ref, from}) => {
@@ -75,7 +76,7 @@ class Product extends Component {
   }
   componentWillMount(){
     ToAPI.getItem(this.state.productID,this.state.productCategory,(item) =>{
-		  this.setState({product:item, bid : item.currentbid + item.bidincrement})
+		  this.setState({product:item, bid : item.currentbid + item.bidincrement, isEnded: DateTime.isEnded(item.endtime)})
       ToAPI.getUserInfo(item.owner,(data) => {
         this.setState({seller: data})
       })
@@ -215,12 +216,24 @@ class Product extends Component {
         {
         <TouchableOpacity
           onPress={() => {
-            if(this.state.product.owner !== this.props.infouser.uid)
-              this.setState({modalVisible:true})
+            if(!this.state.isEnded){
+              if(this.state.product.owner !== this.props.infouser.uid)
+              {
+                this.setState({modalVisible:true})
+              }
+              else {
+                ToAPI.endBid(this.state.productCategory, this.state.productID)
+                this.setState({isEnded:true})
+              }}
         }}
         >
           <Footer style={styles.footerButton}>
-            <Text style={styles.buttonText}>{this.state.product.owner !== this.props.infouser.uid ? 'BID NOW' : 'END NOW'}</Text>
+          {
+            !this.state.isEnded && <Text style={styles.buttonText}>{this.state.product.owner !== this.props.infouser.uid ? 'BID NOW' : 'END NOW'}</Text>
+          }
+          {
+            this.state.isEnded && <Text style={styles.buttonText}>ENDED</Text>
+          }
           </Footer>
         </TouchableOpacity>
       }

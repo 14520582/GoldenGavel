@@ -78,6 +78,10 @@ class ToAPI {
           }
     })
   }
+  static endBid(category, productid){
+    let now = new Date()
+    firebase.database().ref().child(`Product/${category}/${productid}/endtime`).set(now.getTime())
+  }
   static getDetailsBid(productid,callback){
     firebase.database().ref().child(`BidDetail/${productid}`).on('value', (snap) => {
       let items = [];

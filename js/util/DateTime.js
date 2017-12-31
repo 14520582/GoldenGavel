@@ -5,6 +5,14 @@ class DateTime {
     let date = new Date(moment(datestr.replace(pattern,'$3-$2-$1')).format())
     return date.getTime()
   }
+  static isEnded(endtime) {
+    let now = new Date()
+    let distance = (endtime - now.getTime())
+    if(distance < 0)
+      return true
+    else
+      return false
+  }
   static convertToStringTime(endtime) {
     let now = new Date()
     let distance = (endtime - now.getTime())/60000

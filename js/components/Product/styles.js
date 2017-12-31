@@ -81,12 +81,16 @@ module.exports = StyleSheet.create({
     color: '#FFA000'
   },
   nameProduct: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight:'bold',
     color: '#212121',
-    marginTop: 5,
-    marginLeft: deviceWidth*5/100,
-    marginRight: deviceWidth*5/100,
+    //marginTop: 5,
+    // marginLeft: deviceWidth*5/100,
+    // marginRight: deviceWidth*5/100,
+  },
+  nameProductContainer: {
+    padding: 5,
+    backgroundColor: 'rgba(255,255,255,0.7)',
   },
   active: {
 		color: 'white'
@@ -118,6 +122,7 @@ module.exports = StyleSheet.create({
     height: deviceWidth/4*3,
     width: deviceWidth/4*3,
     position: "relative",
+    justifyContent: 'space-between'
   },
   besideImageView: {
     width: deviceWidth/4,
@@ -152,17 +157,18 @@ module.exports = StyleSheet.create({
     borderBottomWidth:1,
 
   },
+  up: {
+    fontSize: 18,
+    color: '#1565C0',
+  },
   rowInfo: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: deviceWidth*5/100,
-    marginRight: deviceWidth*5/100,
+    alignItems: 'flex-end',
   },
   textBid:{
     fontSize: 22,
     color: '#f44336',
     fontWeight: 'bold',
-    paddingRight: 15,
   },
   addcircle:{
     color: '#9CCC65',
@@ -173,7 +179,7 @@ module.exports = StyleSheet.create({
     marginLeft: deviceWidth*2/100,
   },
   date:{
-    fontSize: 18,
+    fontSize: 16,
     fontStyle: 'italic',
   },
   titleSection: {
@@ -226,7 +232,10 @@ module.exports = StyleSheet.create({
   boxCondition:{
     borderWidth: 0.5,
     borderRadius: 3,
-    marginLeft: 15
+    marginLeft: 15,
+    backgroundColor: 'white',
+    alignSelf: 'flex-end',
+    margin: 3,
   },
   remainTime:{
     fontSize: 18,

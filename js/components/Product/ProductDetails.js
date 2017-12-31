@@ -45,6 +45,8 @@ class ProductDetails extends Component {
 	 };
   }
   componentWillMount(){
+  }
+  componentDidMount(){
     ToAPI.getNewItem(8,(items) =>{
       this.setState({
         recommended: items
@@ -72,50 +74,76 @@ class ProductDetails extends Component {
         					>
         					<Image
         					style={styles.imagesView}
-        					source={{uri: this.props.product.image[this.state.pictureIndex]}}
-        					/>
+        					source={{uri: this.props.product.image[this.state.pictureIndex]}}>
+                    <View style={styles.boxCondition}>
+                      <Text style={styles.conditionText}>{this.props.product.condition}</Text>
+                    </View>
+                    <View style={styles.nameProductContainer}>
+                      <Text numberOfLines={2} style={styles.nameProduct}>{this.props.product.name}</Text>
+                    </View>
+        					</Image>
         				</TouchableOpacity>
                 <View style={styles.besideImageView}>
                   <TouchableOpacity
-                  onPress={() => this.props.changePicture(0)}
+                  onPress={() => {
+                    this.props.changePicture(0)
+                    this.setState({pictureIndex: 0})
+                  }}
                   >
                   <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 0 ? 0.3 : 1}]} source={{uri: this.props.product.image[0]}}/>
                   </TouchableOpacity>
                   {this.props.product.image[1] &&
                   <TouchableOpacity
-                    onPress={() => this.props.changePicture(1)}
+                    onPress={() => {
+                      this.props.changePicture(1)
+                      this.setState({pictureIndex: 1})
+                    }}
                   >
                     <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 1 ? 0.3 : 1}]} source={{uri: this.props.product.image[1]}}/>
                   </TouchableOpacity>
                   }
                   {this.props.product.image[2] &&
                   <TouchableOpacity
-                    onPress={() => this.props.changePicture(2)}
+                    onPress={() => {
+                      this.props.changePicture(2)
+                      this.setState({pictureIndex: 2})
+                    }}
                   >
                     <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 2 ? 0.3 : 1}]} source={{uri: this.props.product.image[2]}}/>
                   </TouchableOpacity>
                   }
                   {this.props.product.image[3] &&
                   <TouchableOpacity
-                    onPress={() => this.props.changePicture(3)}
+                    onPress={() => {
+                      this.props.changePicture(3)
+                      this.setState({pictureIndex: 3})
+                    }}
                   >
                     <Image style = {[styles.smallImage, {opacity: this.state.pictureIndex == 3 ? 0.3 : 1}]} source={{uri: this.props.product.image[3]}}/>
                   </TouchableOpacity>
                   }
                 </View>
       			</View>
-  			    <Text numberOfLines={2} style={styles.nameProduct}>{this.props.product.name}</Text>
-            <View style={styles.rowInfo}>
-    			    <Text style={styles.textBid}>{Currency.convertNumberToCurrency(this.props.product.currentbid)+ ' VNĐ'}</Text>
-              <Text style={styles.remainTime}>{DateTime.convertToStringTime(this.props.product.endtime)}</Text>
-              <View style={styles.boxCondition}>
-                <Text style={styles.conditionText}>{this.props.product.condition}</Text>
+            <View style={[styles.rowInfo, {paddingLeft: 5, paddingRight: 5, justifyContent: 'space-between'}]}>
+              <View style={styles.rowInfo}>
+                <Text>Current Bid: </Text>
+      			    <Text style={styles.textBid}>{Currency.convertNumberToCurrency(this.props.product.currentbid)+ ' VNĐ'}</Text>
+                <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
+                  <Icon name ='md-arrow-round-up' style={[styles.up, {fontSize: 20, paddingRight: 2}]}/>
+                  <Text style={[styles.up, {paddingRight: 5}]}>{((this.props.product.currentbid*1.0/this.props.product.startingbid) - 1)*100 + '%'}</Text>
+                </View>
               </View>
+              <Text style={styles.remainTime}>{DateTime.convertToStringTime(this.props.product.endtime)}</Text>
             </View>
-            <View style={styles.rowInfo}>
-              <Text style={[styles.textBid, {color: 'black', fontWeight: 'normal', fontSize: 20}]}>{Currency.convertNumberToCurrency(this.props.product.startingbid) + ' VNĐ'}</Text>
-              <Icon name ='md-add-circle' style={styles.addcircle}/>
-              <Text style={styles.textInfo}>{Currency.convertNumberToCurrency(this.props.product.bidincrement) + ' đ'}</Text>
+            <View style={[styles.rowInfo, {paddingLeft: 5, paddingRight: 5, justifyContent: 'space-between'}]}>
+              <View style={styles.rowInfo}>
+                <Text>Starting Bid: </Text>
+                <Text style={[styles.textBid, {color: 'black', fontWeight: 'normal', fontSize: 20}]}>{Currency.convertNumberToCurrency(this.props.product.startingbid) + ' VNĐ'}</Text>
+              </View>
+              <View style={[styles.rowInfo, {alignItems: 'center'}]}>
+                <Icon name ='md-add-circle' style={styles.addcircle}/>
+                <Text style={styles.textInfo}>{Currency.convertNumberToCurrency(this.props.product.bidincrement) + ' đ'}</Text>
+              </View>
             </View>
           </View>
           <View style={styles.section}>
@@ -194,56 +222,6 @@ class ProductDetails extends Component {
               </View>
             }
           </View>
-    			{
-            // this.props.infouser.uid != this.props.product.owner &&
-    				// <View style = {styles.viewButton}>
-    				// 	<Button
-    				// 		onPress={() =>
-    				// 				alert(JSON.stringify(this.props.product))
-    				// 				}
-    				// 		 style={{backgroundColor: '#F9A825', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
-    				// 	  >
-    				// 		<Text style={{fontSize:15, color: '#FAFAFA',justifyContent: 'center',alignContent: 'center',alignItems: 'center'}}>{'Buy Now'}</Text>
-    				// 	</Button>
-    				// 	<Button
-    				// 		onPress={() =>
-    				// 			this.setState({modalVisible:true})
-    				// 			}
-    				// 		style={{backgroundColor: '#F4511E', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
-    				// 	  >
-    				// 		<Text style={{fontSize:15,color: '#FAFAFA' ,justifyContent: 'center',alignContent: 'center'}}>{'BID NOW'}</Text>
-    				// 	</Button>
-    				// </View>
-            // this.props.infouser.uid  == this.props.product.owner &&
-  					// <View style = {styles.viewButton}>
-  					// 	<Button
-  					// 		onPress={() =>
-  					// 				alert(JSON.stringify(this.props.product))
-  					// 				}
-  					// 		 style={{backgroundColor: '#F9A825', height:deviceHeight/15, width:deviceWidth *6/16,justifyContent: 'center',alignContent: 'center'}}
-  					// 	  >
-  					// 		<Text style={{fontSize:15, color: '#FAFAFA',justifyContent: 'center',alignContent: 'center',alignItems: 'center'}}>{'End Now'}</Text>
-  					// 	</Button>
-  					// </View>
-      			// <View style = {{flexDirection: 'row',marginTop: deviceWidth*1/100, marginLeft: deviceWidth*3/100}}>
-      			// 	<Text style={styles.textTitle}>{'Number of bid: '}</Text>
-      			// 	<Text style={styles.textInfo}>{(this.props.product.numberofbid).toString()}</Text>
-      			// </View>
-      			// <View style={{marginLeft:deviceWidth*5/100,marginRight:deviceWidth*5/100}}>
-      			// 	<View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1}}>
-      			// 		<Text style={{ width: deviceWidth/5}} numberOfLines={1}>{'No.'}</Text>
-      			// 		<Text style={{marginLeft: deviceWidth*10/100, width: deviceWidth/3, }} numberOfLines={1}>{'Name'}</Text>
-      			// 		<Text style={{width: deviceWidth/5}} numberOfLines={1}>{'Bids'}</Text>
-      			// 	</View>
-      			// 	<FlatList
-      			// 		data={bidder}
-      			// 		numColumns={1}
-      			// 		keyExtractor={(item,index) => item.name}
-      			// 		renderItem={this._renderItem}
-            //
-      			// 	/>
-      			// </View>
-          }
           </Content>
       </Container>
     );

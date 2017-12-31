@@ -3,7 +3,7 @@ class Currency {
     let value = money.toString()
     if (value != "") {
       value = value.replace(/\D/g, "");
-      value = value.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1" + ',');
+      value = value.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1" + '.');
     }
     return value
   }

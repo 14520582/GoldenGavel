@@ -24,6 +24,7 @@ module.exports = StyleSheet.create({
   containerBid: {
     backgroundColor: '#FBFAFA',
     borderColor: '#CFD8DC',
+		borderWidth: 0.5,
   },
   imageBid: {
     resizeMode: 'stretch',
