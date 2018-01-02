@@ -81,7 +81,7 @@ class BriefProduct extends Component {
             <View style={styles.details}>
               <View>
                 <View style={styles.row}>
-                  <Icon name ='md-arrow-dropup' style={styles.arrowup}/>
+                  <Image source={require('../assets/gavel.png')}/>
                   <Text style={styles.numbids}>{this.props.item.numberofbid}</Text>
                 </View>
                 <Text style={styles.redText}>{DateTime.convertToStringTime(this.props.item.endtime)}</Text>
@@ -98,9 +98,6 @@ class BriefProduct extends Component {
                 </View>
               </View>
             </View>
-          </View>
-          <View style={styles.rightContainer}>
-           <Icon name ='md-arrow-dropright'/>
           </View>
         </View>
         <View style={styles.separate}/>
@@ -169,6 +166,7 @@ const styles = StyleSheet.create({
     flex: 1.8,
     paddingLeft: 10,
     justifyContent: 'space-between',
+    paddingRight: 10,
   },
   rightContainer: {
     flex: 0.2,

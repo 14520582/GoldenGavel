@@ -240,7 +240,14 @@ module.exports = StyleSheet.create({
   remainTime:{
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FF8F00'
+    color: '#f44336'
+  },
+  rowHeadDetails: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingLeft: 10,
+    paddingRight: 10,
+    justifyContent: 'space-between'
   },
   textTitle:{
     fontSize: 17,

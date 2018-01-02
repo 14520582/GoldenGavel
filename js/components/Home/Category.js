@@ -88,7 +88,7 @@ class Category extends Component {
           <View style={[styles.rowinfobid, styles.statusHeader, {position: 'absolute',width: deviceWidth/2}]}>
             <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
             <View style={styles.row}>
-              <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
+              <Image source={require('../../assets/gavel.png')} style={{margin: 4}}/>
               <Text style={styles.colortext}>{item.numberofbid}</Text>
             </View>
           </View>

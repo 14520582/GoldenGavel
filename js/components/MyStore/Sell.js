@@ -33,10 +33,17 @@ class Sell extends Component {
     };
   }
   componentWillMount(){
-    ToAPI.getMyProduct(this.props.infouser.uid,(data) =>{
-      data.sort((a, b) => b.starttime - a.starttime)
-      this.filteringProduct(data)
-    })
+    if(this.props.seller){
+      ToAPI.getMyProduct(this.props.seller.uid,(data) =>{
+        data.sort((a, b) => b.starttime - a.starttime)
+        this.filteringProduct(data)
+      })
+    }else{
+      ToAPI.getMyProduct(this.props.infouser.uid,(data) =>{
+        data.sort((a, b) => b.starttime - a.starttime)
+        this.filteringProduct(data)
+      })
+    }
   }
   filteringProduct(data) {
     let now = new Date()

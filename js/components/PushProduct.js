@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, View, StatusBar, Text,StyleSheet, Dimensions, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Image, View, StatusBar, Text,StyleSheet, Dimensions, ScrollView, TouchableOpacity, BackHandler, ActivityIndicator } from "react-native";
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import { Container, Button, H3, Header, Content, Title,Form, Body, Left, Fab, Right,Radio, ListItem, Input,Item, Icon, Label,Picker } from "native-base";
@@ -25,6 +25,7 @@ const options = {
 class PushProduct extends Component {
 	constructor(props) {
 		super(props);
+    this._BackHandler = this._BackHandler.bind(this)
 		this.state = {
 			image1: null,
 			image2: null,
@@ -47,6 +48,16 @@ class PushProduct extends Component {
 			categories: null,
 		};
 	}
+  _BackHandler = () => {
+    this.props.navigation.goBack()
+    return true;
+  }
+  componentDidMount (){
+    BackHandler.addEventListener('hardwareBackPress', this._BackHandler)
+  }
+  componentWillUnMount (){
+    BackHandler.removeEventListener('hardwareBackPress', this._BackHandler)
+  }
   initialData(){
     this.setState({
       image1: null,
@@ -356,8 +367,8 @@ class PushProduct extends Component {
 			        mode="datetime"
 			        placeholder="select date"
 			        format="DD-MM-YYYY HH:mm"
-			        minDate="17-11-2017"
-			        maxDate="17-12-2017"
+			        minDate = {this.state.endtime}
+			        maxDate = {moment().add(60, 'days').format('DD-MM-YYYY hh:mm')}
 			        confirmBtnText="Confirm"
 			        cancelBtnText="Cancel"
 			        customStyles={{

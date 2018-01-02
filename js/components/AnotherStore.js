@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet,Image,TouchableOpacity } from "react-native";
+import { Platform, StyleSheet,BackHandler } from "react-native";
 
 import {
   Container,
@@ -25,22 +25,29 @@ import {
   Segment,
   Item as FormItem
 } from "native-base";
-import ToAPI from '../../server/ToAPI'
+import ToAPI from '../server/ToAPI'
 import { connect } from 'react-redux'
-import styles from './styles'
-import Sell from './Sell'
-import Buy from './Buy'
-class MyStore extends Component {
+import styles from './MyStore/styles'
+import Sell from './MyStore/Sell'
+class AnotherStore extends Component {
   constructor(props) {
     super(props);
+    this._BackHandler = this._BackHandler.bind(this)
     this.state = {
       index: 0,
       showFilter: false,
       isEnd: false,
     };
   }
-  _onChangeTab = ({i, ref, from}) => {
-    this.setState({index: i})
+  _BackHandler = () => {
+    this.props.navigation.goBack()
+    return true;
+  }
+  componentDidMount (){
+    BackHandler.addEventListener('hardwareBackPress', this._BackHandler)
+  }
+  componentWillUnMount (){
+    BackHandler.removeEventListener('hardwareBackPress', this._BackHandler)
   }
   render() {
     return (
@@ -49,13 +56,13 @@ class MyStore extends Component {
           <Left>
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              onPress={() => this.props.navigation.goBack()}
             >
-              <Icon name="menu" />
+              <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>My Store</Title>
+            <Title>{'Store: ' + this.props.navigation.state.params.seller.displayName}</Title>
           </Body>
           <Right>
             <Button
@@ -64,12 +71,7 @@ class MyStore extends Component {
             >
               <Icon style={{fontSize: 35}} name={this.state.showFilter ? 'md-arrow-dropup' : 'md-arrow-dropdown'} />
             </Button>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("PushProduct")} style={{alignSelf: 'center'}}>
-              <View style={{borderColor: '#fff', borderWidth: 1, alignSelf: 'center', marginLeft: 8}}>
-                <Text style={{fontWeight: 'bold', color: '#fff', padding: 5}}>SELL</Text>
-              </View>
-            </TouchableOpacity>
-          </Right>
+           </Right>
         </Header>
         {
         this.state.showFilter && <Segment style={styles.tabHeading}>
@@ -83,24 +85,7 @@ class MyStore extends Component {
             </Button>
           </Segment>
         }
-        <Tabs initialPage={0} onChangeTab={this._onChangeTab}>
-          <Tab heading = {
-            <TabHeading style={styles.tabHeading}>
-              <Icon style={this.state.index == 0 ? styles.active : styles.normal} name="md-easel" />
-              <Text style={this.state.index == 0 ? styles.active : styles.normal} >Sell</Text>
-            </TabHeading>
-          }>
-            <Sell isEnd={this.state.isEnd} navigation={this.props.navigation}/>
-          </Tab>
-          <Tab heading = {
-            <TabHeading style={styles.tabHeading}>
-              <Icon style={this.state.index == 1 ? styles.active : styles.normal} name="md-cart"/>
-              <Text style={this.state.index == 1 ? styles.active : styles.normal}>Buy</Text>
-            </TabHeading>
-          }>
-            <Buy isEnd={this.state.isEnd} navigation={this.props.navigation}/>
-          </Tab>
-        </Tabs>
+        <Sell isEnd={this.state.isEnd} seller= {this.props.navigation.state.params.seller} navigation={this.props.navigation}/>
       </Container>
     );
   }
@@ -112,4 +97,4 @@ function mapStateToProps (state) {
 }
 export default connect(
   mapStateToProps,
-)(MyStore)
+)(AnotherStore)

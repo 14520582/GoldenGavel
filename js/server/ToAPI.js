@@ -286,25 +286,63 @@ class ToAPI {
     })
   }
   static getNewItem (limit,callback) {
-    firebase.database().ref('Product/NewItem').on('value', (snap) => {
+    // firebase.database().ref('Product/NewItem').on('value', (snap) => {
+    //   let items = [];
+    //   snap.forEach((child) => {
+    //     let item = child.val()
+    //     item['key'] = child.key
+    //     items.push(item);
+    //   });
+    //   callback(items.reverse())
+    // })
+    let now = new Date()
+    this.getCategories((categories) => {
       let items = [];
-      snap.forEach((child) => {
-        let item = child.val()
-        item['key'] = child.key
-        items.push(item);
+      categories.forEach((i, index, array) => {
+        firebase.database().ref(`Product/${i.category}`).orderByChild("endtime").startAt(now.getTime()).limitToLast(2).on('value', (snap) => {
+            snap.forEach((child) => {
+                  let item = child.val()
+                  item['key'] = child.key
+                  items.push(item);
+            });
+            if(index === array.length - 1)
+            {
+              items.sort((a, b) => b.starttime - a.starttime)
+              //console.log(items.length)
+              callback(items)
+            }
+          })
       });
-      callback(items.reverse())
     })
   }
   static getHotItem (limit,callback) {
-    firebase.database().ref('Product/HotItem').on('value', (snap) => {
+    // firebase.database().ref('Product/HotItem').on('value', (snap) => {
+    //   let items = [];
+    //   snap.forEach((child) => {
+    //     let item = child.val()
+    //     item['key'] = child.key
+    //     items.push(item);
+    //   });
+    //   callback(items.reverse())
+    // })
+    let now = new Date()
+    this.getCategories((categories) => {
       let items = [];
-      snap.forEach((child) => {
-        let item = child.val()
-        item['key'] = child.key
-        items.push(item);
+      categories.forEach((i, index, array) => {
+        firebase.database().ref(`Product/${i.category}`).orderByChild("endtime").startAt(now.getTime()).limitToLast(2).on('value', (snap) => {
+            snap.forEach((child) => {
+                  let item = child.val()
+                  item['key'] = child.key
+                  items.push(item);
+            });
+            if(index === array.length - 1)
+            {
+              items.sort((a, b) => b.numberofbid - a.numberofbid)
+              //console.log(items.length)
+              callback(items)
+            }
+          })
       });
-      callback(items.reverse())
     })
   }
   static pushProduct(productinfo, uid){

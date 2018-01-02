@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, Dimensions, StyleSheet, TouchableOpacity, TextInput, Modal, Alert, ActivityIndicator, Linking} from "react-native";
+import { Platform, Dimensions, StyleSheet, TouchableOpacity, TextInput, Modal, Alert,BackHandler, ActivityIndicator, Linking} from "react-native";
 import imgPhone from '../assets/phone.png'
 import imgChat from '../assets/paper-plane.png'
 import { connect } from 'react-redux'
@@ -38,11 +38,22 @@ const options = {
 class Profile extends Component {
   constructor(props) {
     super(props);
+    this._BackHandler = this._BackHandler.bind(this)
     this.state ={
       modalVisible: false,
       isSending: false,
       message: ''
     }
+  }
+  _BackHandler = () => {
+    this.props.navigation.goBack()
+    return true;
+  }
+  componentDidMount (){
+    BackHandler.addEventListener('hardwareBackPress', this._BackHandler)
+  }
+  componentWillUnMount (){
+    BackHandler.removeEventListener('hardwareBackPress', this._BackHandler)
   }
   componentWillMount() {
   }

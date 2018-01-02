@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet,View,Image,TouchableHighlight,Modal,TextInput,Dimensions,FlatList,TouchableOpacity } from "react-native";
+import { Platform, StyleSheet,View,Image,TouchableHighlight,Modal,TextInput,Dimensions,BackHandler,FlatList,TouchableOpacity } from "react-native";
 import DateTime from '../../util/DateTime'
 import Currency from '../../util/Currency'
 import ProductDetails from './ProductDetails'
@@ -43,6 +43,7 @@ var bidder=[{name: 'ngan1111111111111111111111111',  bids:1000000000000}, {name:
 class Product extends Component {
   constructor(props) {
     super(props);
+    this._BackHandler = this._BackHandler.bind(this)
     this.state = {
 		product:{
         "bidincrement" : 0,
@@ -70,6 +71,16 @@ class Product extends Component {
     seller: null,
     isEnded: false,
 	 };
+  }
+  _BackHandler = () => {
+    this.props.navigation.goBack()
+    return true;
+  }
+  componentDidMount (){
+    BackHandler.addEventListener('hardwareBackPress', this._BackHandler)
+  }
+  componentWillUnMount (){
+    BackHandler.removeEventListener('hardwareBackPress', this._BackHandler)
   }
   _onChangeTab = ({i, ref, from}) => {
     this.setState({index: i})

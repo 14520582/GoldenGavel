@@ -71,7 +71,7 @@ class Search extends Component {
         <Header searchBar  rounded androidStatusBarColor='#FF8F00' style={{backgroundColor: '#FFA000', alignItems: 'center'}}>
           <Item>
             <Icon name="search" />
-            <Input style={{height: 60}}
+            <Input style={{height: 80}}
               autoFocus={true}
               value={this.state.searchtext}
               returnKeyType='search'

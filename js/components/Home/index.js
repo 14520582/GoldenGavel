@@ -85,7 +85,7 @@ class Home extends Component {
 				</Left>
 				<Item>
 					<Icon name="search" />
-					<Input style={{height: 60}} onFocus={() => this.props.navigation.navigate("Search")} placeholder="Search" />
+					<Input style={{height: 80}} onFocus={() => this.props.navigation.navigate("Search")} placeholder="Search" />
 				</Item>
         </Header>
         <Content>
@@ -211,7 +211,7 @@ class Home extends Component {
         <View style={[styles.rowinfobid1, styles.statusHeader]}>
           <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
           <View style={styles.row}>
-            <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
+            <Image source={require('../../assets/gavel.png')} style={{margin: 4}}/>
             <Text style={styles.colortext}>{item.numberofbid}</Text>
           </View>
         </View>

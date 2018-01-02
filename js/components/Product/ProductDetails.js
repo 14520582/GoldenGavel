@@ -124,25 +124,34 @@ class ProductDetails extends Component {
                   }
                 </View>
       			</View>
-            <View style={[styles.rowInfo, {paddingLeft: 5, paddingRight: 5, justifyContent: 'space-between'}]}>
+            <View style={styles.rowHeadDetails}>
               <View style={styles.rowInfo}>
                 <Text>Current Bid: </Text>
       			    <Text style={styles.textBid}>{Currency.convertNumberToCurrency(this.props.product.currentbid)+ ' VNĐ'}</Text>
-                <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
-                  <Icon name ='md-arrow-round-up' style={[styles.up, {fontSize: 20, paddingRight: 2}]}/>
-                  <Text style={[styles.up, {paddingRight: 5}]}>{((this.props.product.currentbid*1.0/this.props.product.startingbid) - 1)*100 + '%'}</Text>
-                </View>
               </View>
-              <Text style={styles.remainTime}>{DateTime.convertToStringTime(this.props.product.endtime)}</Text>
+              <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
+                <Icon name ='md-arrow-round-up' style={[styles.up, {fontSize: 20, paddingRight: 5}]}/>
+                <Text style={styles.up}>{(((this.props.product.currentbid*1.0/this.props.product.startingbid) - 1)*100).toFixed(2) + '%'}</Text>
+              </View>
             </View>
-            <View style={[styles.rowInfo, {paddingLeft: 5, paddingRight: 5, justifyContent: 'space-between'}]}>
+            <View style={styles.rowHeadDetails}>
               <View style={styles.rowInfo}>
                 <Text>Starting Bid: </Text>
                 <Text style={[styles.textBid, {color: 'black', fontWeight: 'normal', fontSize: 20}]}>{Currency.convertNumberToCurrency(this.props.product.startingbid) + ' VNĐ'}</Text>
               </View>
-              <View style={[styles.rowInfo, {alignItems: 'center'}]}>
-                <Icon name ='md-add-circle' style={styles.addcircle}/>
-                <Text style={styles.textInfo}>{Currency.convertNumberToCurrency(this.props.product.bidincrement) + ' đ'}</Text>
+              <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
+                <Icon name ='md-time' style={{color: '#E65100', fontSize: 20, paddingRight: 7}}/>
+                <Text style={styles.remainTime}>{DateTime.convertToStringTime(this.props.product.endtime)}</Text>
+              </View>
+            </View>
+            <View style={styles.rowHeadDetails}>
+              <View style={styles.rowInfo}>
+                <Text>Bid Increment: </Text>
+                <Text style={[styles.textBid, {color: 'black', fontWeight: 'bold', fontSize: 20}]}>{Currency.convertNumberToCurrency(this.props.product.bidincrement) + ' VNĐ'}</Text>
+              </View>
+              <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
+                <Image source={require('../../assets/gavel.png')} style={{height: 20, width: 20, margin: 5}}/>
+                <Text style={[styles.remainTime, {color: '#FF8F00'}]}>{this.props.product.numberofbid + ' bids'}</Text>
               </View>
             </View>
           </View>
@@ -154,15 +163,14 @@ class ProductDetails extends Component {
               }}>
                 <View style={[styles.row, {marginTop: 0}]}>
                   <Thumbnail small source={this.props.seller ? {uri: this.props.seller.photoURL} : null} />
-                  <Text style={{width: deviceWidth/2.5, paddingLeft: 10, fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>{this.props.seller ? this.props.seller.displayName : ''}</Text>
+                  <Text style={{width: deviceWidth/1.8, paddingLeft: 10, fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>{this.props.seller ? this.props.seller.displayName : ''}</Text>
                 </View>
               </TouchableOpacity>
               <Button
                 bordered
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => this.props.navigation.navigate("AnotherStore", {seller: this.props.seller})}
               >
                 <Icon name="home" />
-                <Text>Visit shop</Text>
               </Button>
             </View>
           </View>

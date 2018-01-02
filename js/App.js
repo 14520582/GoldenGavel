@@ -10,6 +10,7 @@ import firebase from 'react-native-firebase'
 import Drawer from "./Drawer";
 import Product from "./components/Product/";
 import AnotherProfile from "./components/AnotherProfile/";
+import AnotherStore from "./components/AnotherStore/";
 import MyStore from "./components/MyStore/";
 import Search from "./components/Search/";
 import Login from "./components/Login/";
@@ -41,6 +42,7 @@ const AppNavigator = StackNavigator(
         Notification: { screen: Notification },
         CategoryListProduct: { screen: CategoryListProduct },
         MyStore: { screen: MyStore},
+        AnotherStore: { screen: AnotherStore},
         AnotherProfile: { screen: AnotherProfile},
         Categories: { screen: Categories },
         SplashScreen: { screen: SplashScreen },
