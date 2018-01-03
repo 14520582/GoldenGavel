@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, View, Dimensions,Image, FlatList, TouchableOpacity } from "react-native";
+import { Platform, StyleSheet, View, Dimensions,Image, FlatList, BackHandler, TouchableOpacity } from "react-native";
 import {
   Container,
   Header,
@@ -23,9 +23,20 @@ import ToAPI from '../server/ToAPI'
 class Categories extends Component {
   constructor(props) {
     super(props);
+    this._BackHandler = this._BackHandler.bind(this)
     this.state = {
       categories: this.props.navigation.state.params.categories
     };
+  }
+  _BackHandler = () => {
+    this.props.navigation.goBack()
+    return true;
+  }
+  componentDidMount (){
+    BackHandler.addEventListener('hardwareBackPress', this._BackHandler)
+  }
+  componentWillUnMount (){
+    BackHandler.removeEventListener('hardwareBackPress', this._BackHandler)
   }
   _renderItem = ({item}) => (
     <View removeClippedSubviews={true} style={styles.category}>
