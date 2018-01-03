@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Image, View, StatusBar,StyleSheet, Dimensions, ScrollView, ActivityIndicator } from "react-native";
-
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 import { Container, Button, H3, Header, Title, Body, Left, Right, Input,Item, Icon,Text } from "native-base";
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
@@ -120,6 +120,8 @@ class Login extends Component {
 	  })
 	  .then((currentUser) => {
 				ToAPI.getUserInfo(currentUser.uid,(user) => {
+					FCM.subscribeToTopic('Message_' + currentUser.uid);
+					FCM.subscribeToTopic('Notification_' + currentUser.uid);
 					if(user){
 						this.props.dispatchInfoUserUpdate(user)
 					}

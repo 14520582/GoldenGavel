@@ -10,8 +10,13 @@ module.exports = StyleSheet.create({
 	name : {
 		paddingLeft: 5,
 		fontSize: 20,
+		paddingRight: 5,
 		color: 'black',
 		fontWeight: 'bold'
+	},
+	imageCa: {
+		height: deviceWidth/2,
+		width: deviceWidth/2
 	},
 	colortext: {
 		color: '#FFA000'

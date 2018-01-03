@@ -6,6 +6,9 @@ import { updateNotificationNumber, updateMessageNumber } from '../actions/notifi
 import { Container, Button, H3, Header, Title, Body, Left, Right, Input,Item, Icon } from "native-base";
 import ToAPI from '../server/ToAPI'
 import Auth from '../util/Auth'
+import firebase from 'react-native-firebase'
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
+
 class SplashScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -17,6 +20,8 @@ class SplashScreen extends Component {
 		//alert(JSON.stringify(this.props.notificaton))
     this.checkLogin()
   }
+	componentDidMount() {
+	}
 	render() {
 		return (
       <Container style={styles.container}>
@@ -25,6 +30,8 @@ class SplashScreen extends Component {
 	}
   checkLogin() {
     if(this.props.infouser) {
+			FCM.subscribeToTopic('Message_' + this.props.infouser.uid);
+			FCM.subscribeToTopic('Notification_' + this.props.infouser.uid);
 			ToAPI.getUserInfo(this.props.infouser.uid,(user) => {
 				if(user){
 					this.props.dispatchInfoUserUpdate(user)
@@ -50,6 +57,12 @@ class SplashScreen extends Component {
 				})
 				this.props.dispatchUpdateMessageNumber(num)
 			})
+			// firebase.messaging().requestPermissions();
+			// firebase.messaging().getToken().then(token => {
+			//  	firebase.database().ref().child('Token').set(token)
+			// });
+			// firebase.messaging().subscribeToTopic('Notification_' + this.props.infouser.uid);
+			// firebase.messaging().subscribeToTopic('Message_' + this.props.infouser.uid);
 			this.props.navigation.navigate('Home')
     }else{
       this.props.navigation.navigate('Login')

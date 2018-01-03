@@ -53,6 +53,10 @@
 		5A2F6AF180C34BD0868657B5 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9813E6E1C1043FFAF27E422 /* libRNImagePicker.a */; };
 		8ED9C90D638145CE9A7B0B35 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8762322CF6D14FC88D9629B8 /* libRNVectorIcons.a */; };
 		8525D9A9FB8C4E88AF35A250 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B1589611B8545B29CBB8607 /* libBVLinearGradient.a */; };
+		6C901F0BEEDD4ED184474E48 /* DroidSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCAF49B90D0744A5918DF51D /* DroidSans.ttf */; };
+		DA3B983B63FE41B5B2132270 /* Fonty.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 88BD9CF8B17A47DDB19C3C84 /* Fonty.ttf */; };
+		A18B328708BD4C768E77EDDB /* Windsong.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EEB3422E7AB04F45AF4478E5 /* Windsong.ttf */; };
+		F4D52A87A1EE408EA5795BDE /* libRNFIRMessaging.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E34F4F5D60D54B60A7D73FEF /* libRNFIRMessaging.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,6 +306,11 @@
 		8762322CF6D14FC88D9629B8 /* libRNVectorIcons.a */ = {isa = PBXFileReference; name = "libRNVectorIcons.a"; path = "libRNVectorIcons.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		D01952D54B234B44969262B9 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		2B1589611B8545B29CBB8607 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		BCAF49B90D0744A5918DF51D /* DroidSans.ttf */ = {isa = PBXFileReference; name = "DroidSans.ttf"; path = "../fonts/DroidSans.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		88BD9CF8B17A47DDB19C3C84 /* Fonty.ttf */ = {isa = PBXFileReference; name = "Fonty.ttf"; path = "../fonts/Fonty.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EEB3422E7AB04F45AF4478E5 /* Windsong.ttf */ = {isa = PBXFileReference; name = "Windsong.ttf"; path = "../fonts/Windsong.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		88F8BA87DFDF4353860210FF /* RNFIRMessaging.xcodeproj */ = {isa = PBXFileReference; name = "RNFIRMessaging.xcodeproj"; path = "../node_modules/react-native-fcm/ios/RNFIRMessaging.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E34F4F5D60D54B60A7D73FEF /* libRNFIRMessaging.a */ = {isa = PBXFileReference; name = "libRNFIRMessaging.a"; path = "libRNFIRMessaging.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -335,6 +344,7 @@
 				5A2F6AF180C34BD0868657B5 /* libRNImagePicker.a in Frameworks */,
 				8ED9C90D638145CE9A7B0B35 /* libRNVectorIcons.a in Frameworks */,
 				8525D9A9FB8C4E88AF35A250 /* libBVLinearGradient.a in Frameworks */,
+				F4D52A87A1EE408EA5795BDE /* libRNFIRMessaging.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +518,7 @@
 				AD01D31C8DF34EEFA130EAC1 /* RNImagePicker.xcodeproj */,
 				01767BF9E0A740199B73D414 /* RNVectorIcons.xcodeproj */,
 				D01952D54B234B44969262B9 /* BVLinearGradient.xcodeproj */,
+				88F8BA87DFDF4353860210FF /* RNFIRMessaging.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -569,6 +580,9 @@
 				A424880B0422499883F9C19A /* rubicon-icon-font.ttf */,
 				ABB308D598964E3AAA5A818C /* SimpleLineIcons.ttf */,
 				28DE0E1D770B4B72901037BA /* Zocial.ttf */,
+				BCAF49B90D0744A5918DF51D /* DroidSans.ttf */,
+				88BD9CF8B17A47DDB19C3C84 /* Fonty.ttf */,
+				EEB3422E7AB04F45AF4478E5 /* Windsong.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -955,6 +969,9 @@
 				6126C4CF3B5C4B4693C41894 /* rubicon-icon-font.ttf in Resources */,
 				BED8F73902CD47418C0451D4 /* SimpleLineIcons.ttf in Resources */,
 				377133C7DBC04C50A2A7462C /* Zocial.ttf in Resources */,
+				6C901F0BEEDD4ED184474E48 /* DroidSans.ttf in Resources */,
+				DA3B983B63FE41B5B2132270 /* Fonty.ttf in Resources */,
+				A18B328708BD4C768E77EDDB /* Windsong.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1092,6 +1109,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1100,6 +1118,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1124,6 +1143,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1132,6 +1152,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1158,6 +1179,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1183,6 +1205,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1216,6 +1239,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1224,6 +1248,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Debug;
@@ -1257,6 +1282,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1265,6 +1291,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\@expo\vector-icons\vendor\react-native-vector-icons\RNVectorIconsManager",
 					"$(SRCROOT)\..\node_modules\react-native-linear-gradient\BVLinearGradient",
+					"$(SRCROOT)\..\node_modules\react-native-fcm\ios",
 				);
 			};
 			name = Release;
@@ -1293,6 +1320,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1317,6 +1345,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

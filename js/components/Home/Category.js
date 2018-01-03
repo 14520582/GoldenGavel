@@ -82,9 +82,9 @@ class Category extends Component {
      activeOpacity={0.5} onPress={() => this.props.navigation.navigate("Product", {product: item})}
     >
       {
-        <View style={{height: deviceWidth/2, width: deviceWidth/2}}>
-          <ResponsiveImage style={{alignSelf: 'center'}} initWidth={deviceWidth/2} initHeight={deviceWidth/2} source={{uri: item.image[0]}}>
-          </ResponsiveImage>
+        <View style={styles.imageCa}>
+          <Image style={styles.imageCa} source={{uri: item.image[0]}}>
+          </Image>
           <View style={[styles.rowinfobid, styles.statusHeader, {position: 'absolute',width: deviceWidth/2}]}>
             <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
             <View style={styles.row}>

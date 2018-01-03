@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from 'react-native'
 import App from "./js/App";
-
 export default class App1 extends React.Component {
   constructor() {
     super();
@@ -9,7 +8,6 @@ export default class App1 extends React.Component {
       isReady: false
     };
   }
-
   render() {
     return <App />;
   }

@@ -48,6 +48,7 @@ class Notification extends Component {
     this.setState({
       showMessageBox: visible,
       isSending: false,
+      message: '',
       content: content ? content : null
     })
   }
@@ -73,7 +74,7 @@ class Notification extends Component {
         animationType="slide"
         transparent={true}
         visible={this.state.showMessageBox}
-        onRequestClose={() => {this.setState({showMessageBox: false})}}
+        onRequestClose={() => this.openMessageBox(false)}
         >
 
         <View style={styles.modal}>

@@ -482,7 +482,7 @@ class PushProduct extends Component {
               >
                 <Item label="New" value="New" />
                 <Item label="Like New" value="Likw New" />
-                <Item label="Under Warranty" value="Under Warranty" />
+                <Item label="Warranty" value="Warranty" />
                 <Item label="80%" value="80%" />
                 <Item label="50%" value="50%" />
                 <Item label="Old" value="Old" />

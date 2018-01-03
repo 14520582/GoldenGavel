@@ -161,11 +161,11 @@ class Profile extends Component {
           animationType="slide"
           transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={() => {this.setState({modalVisible: false})}}
+          onRequestClose={() => {this.setState({modalVisible: false, message: ''})}}
           >
           <View style={styles.modal}>
           <View style={styles.messagebox}>
-            <TouchableOpacity onPress={() => this.setState({modalVisible: false})}>
+            <TouchableOpacity onPress={() => this.setState({modalVisible: false, message: ''})}>
               <Icon style={styles.iconclose} name='md-close'/>
             </TouchableOpacity>
             <View style={styles.userinfo}>
@@ -185,7 +185,10 @@ class Profile extends Component {
                 }}
               />
               {
-                !this.state.isSending && <TouchableOpacity onPress={() => this.onSendMessage()}>
+                !this.state.isSending && <TouchableOpacity onPress={() => {
+                  this.onSendMessage()
+                  this.setState({message: ''})
+                }}>
                   <View style={{borderLeftWidth: 0.5, borderColor: 'black'}}>
                     <Icon style={{paddingLeft: 12, paddingRight: 12}} name='md-paper-plane'/>
                   </View>
@@ -265,7 +268,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     paddingLeft: 10,
     fontStyle: 'italic',
-    color: '#FF6F00'
+    color: '#FF6F00',
   },
 });
 function mapStateToProps (state) {

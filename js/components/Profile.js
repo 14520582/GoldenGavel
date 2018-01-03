@@ -313,10 +313,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   iconedit: {
-    fontSize: 20
+    fontSize: 20,
+    alignSelf: 'center'
   },
   textedit:{
-    fontSize: 17
+    fontSize: 17,
+    paddingTop: 10
   },
   placeholder:{
     fontStyle: 'italic',

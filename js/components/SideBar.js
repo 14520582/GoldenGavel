@@ -132,8 +132,6 @@ class SideBar extends Component {
                 <Badge
                   style={{
                     borderRadius: 3,
-                    height: 30,
-                    width: 30,
                     alignItems: 'center',
                     justifyContent: 'center',
                     backgroundColor: '#FFA000',
@@ -207,7 +205,7 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   badgeText: {
-    fontSize: Platform.OS === "ios" ? 20 : 18,
+    fontSize: Platform.OS === "ios" ? 18 : 17,
     fontWeight: "bold",
     textAlign: "center",
     marginTop: Platform.OS === "android" ? -3 : undefined

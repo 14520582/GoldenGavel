@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Image, TouchableOpacity,Dimensions, FlatList, ActivityIndicator } from "react-native";
-
+import FCM, {FCMEvent, RemoteNotificationResult, WillPresentNotificationResult, NotificationType} from 'react-native-fcm';
 import {
   Container,
   Header,
@@ -24,6 +24,7 @@ import Currency from '../../util/Currency'
 import Swiper from 'react-native-swiper';
 import styles from './styles'
 import Category from './Category'
+import firebase from 'react-native-firebase'
 import LinearGradient from 'react-native-linear-gradient';
 import ResponsiveImage from 'react-native-responsive-image';
 const deviceWidth = Dimensions.get('window').width;
@@ -47,6 +48,9 @@ class Home extends Component {
     //   alert(JSON.stringify(items))
     // })
   }
+  componentWillUnMount() {
+    //this.notificationListener.remove();
+  }
   componentDidMount(){
     ToAPI.getBanner((banner) =>{
       this.setState({
@@ -69,6 +73,28 @@ class Home extends Component {
         hotitem: hotitem
       })
     })
+    // iOS: show permission prompt for the first call. later just check permission in user settings
+    // Android: check permission in user settings
+
+    FCM.requestPermissions().then(()=>console.log('granted')).catch(()=>console.log('notification permission rejected'));
+
+    FCM.getFCMToken().then(token => {
+        //firebase.database().ref().child('Token').set(token)
+        // store fcm token in your server
+    });
+
+    this.notificationListener = FCM.on(FCMEvent.Notification, async (notif) => {
+          // FCM.presentLocalNotification({
+          //   id: "UNIQ_ID_STRING",
+          //   title: "fh",
+          //   body: "ghdf",
+          //   sound: "default",
+          //   priority: "high",
+          //   click_action: "ACTION",
+          //   icon: "ic_launcher",
+          //   show_in_foreground: true,
+          // });
+    });
   }
   render() {
     return (
@@ -85,7 +111,7 @@ class Home extends Component {
 				</Left>
 				<Item>
 					<Icon name="search" />
-					<Input style={{height: 80}} onFocus={() => this.props.navigation.navigate("Search")} placeholder="Search" />
+					<Input style={{height: 60, paddingTop: 13}} onFocus={() => this.props.navigation.navigate("Search")} placeholder="Search" />
 				</Item>
         </Header>
         <Content>
