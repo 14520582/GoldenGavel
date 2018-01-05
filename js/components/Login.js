@@ -96,6 +96,12 @@ class Login extends Component {
 	}
 	onLoginAccount(){
 		//ToAPI.setUserInfo('sd')
+		ToAPI.getUserInfo("Zb6VOSlRulZqLFNnN2pqjWAG5Ay2",(user) => {
+			FCM.subscribeToTopic('Message_' + "Zb6VOSlRulZqLFNnN2pqjWAG5Ay2");
+			FCM.subscribeToTopic('Notification_' + "Zb6VOSlRulZqLFNnN2pqjWAG5Ay2");
+			this.props.dispatchInfoUserUpdate(user)
+		})
+		this.props.navigation.navigate('Home')
 	}
 	onLoginFacebook(){
 		this.setState ({
