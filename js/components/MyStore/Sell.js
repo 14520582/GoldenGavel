@@ -27,12 +27,28 @@ class Sell extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
       end: [],
+      refreshing: false,
       ongoing: []
     };
   }
   componentWillMount(){
+    if(this.props.seller){
+      ToAPI.getMyProduct(this.props.seller.uid,(data) =>{
+        data.sort((a, b) => b.starttime - a.starttime)
+        this.filteringProduct(data)
+      })
+    }else{
+      ToAPI.getMyProduct(this.props.infouser.uid,(data) =>{
+        data.sort((a, b) => b.starttime - a.starttime)
+        this.filteringProduct(data)
+      })
+    }
+  }
+  refreshSellScreen = () => {
+    this.setState({
+      refreshing: true,
+    })
     if(this.props.seller){
       ToAPI.getMyProduct(this.props.seller.uid,(data) =>{
         data.sort((a, b) => b.starttime - a.starttime)
@@ -57,7 +73,8 @@ class Sell extends Component {
     })
     this.setState({
       end: end,
-      ongoing: ongoing
+      ongoing: ongoing,
+      refreshing: false,
     })
   }
   _renderItem = ({item}) => {
@@ -78,7 +95,6 @@ class Sell extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Content stickyHeaderIndices={[0]}>
           <View>
             <View style={styles.header}>
               <Icon style={this.props.isEnd ? styles.end : styles.ongoing} name='md-ionic'/>
@@ -87,12 +103,12 @@ class Sell extends Component {
           </View>
             <FlatList
               data = {this.props.isEnd ? this.state.end : this.state.ongoing}
-              removeClippedSubviews={true}
               extraData= {this.state}
+              refreshing = {this.state.refreshing}
+              onRefresh = {this.refreshSellScreen}
               keyExtractor={(item) => item.key}
               renderItem = {this._renderItem}
             />
-        </Content>
       </Container>
     );
   }

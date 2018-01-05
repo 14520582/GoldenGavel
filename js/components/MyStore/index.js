@@ -83,7 +83,7 @@ class MyStore extends Component {
             </Button>
           </Segment>
         }
-        <Tabs initialPage={0} onChangeTab={this._onChangeTab}>
+        <Tabs initialPage={0} locked={true} onChangeTab={this._onChangeTab}>
           <Tab heading = {
             <TabHeading style={styles.tabHeading}>
               <Icon style={this.state.index == 0 ? styles.active : styles.normal} name="md-easel" />

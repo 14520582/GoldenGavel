@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, View, StatusBar, Text,StyleSheet, Dimensions, ScrollView, TouchableOpacity, BackHandler, ActivityIndicator } from "react-native";
+import { Image, View, StatusBar, Text,Alert,StyleSheet, Dimensions, ScrollView, TouchableOpacity,Keyboard, BackHandler, ActivityIndicator } from "react-native";
 import { connect } from 'react-redux'
 import { infoUserUpdate } from '../actions/infouser'
 import { Container, Button, H3, Header, Content, Title,Form, Body, Left, Fab, Right,Radio, ListItem, Input,Item, Icon, Label,Picker } from "native-base";
@@ -19,7 +19,9 @@ const options = {
   title: 'Option',
   storageOptions: {
     skipBackup: true,
-    path: 'images'
+    path: 'images',
+    maxWidth: 300,
+    maxHeight: 300
   }
 };
 class PushProduct extends Component {
@@ -108,69 +110,66 @@ class PushProduct extends Component {
 	 });
  	}
   async pushProduct() {
+    Keyboard.dismiss()
     let mess = this.checkValid()
-    if(mess)
+    if(mess !== null)
     {
         this.setState({uploading: false})
-        alert(null,mess)
+        Alert.alert(null,mess)
         return
     }
     let images = []
-    let a = await ToAPI.upLoadPhoto(this.state.image1.path, this.state.categories[this.state.category].category, this.state.name, 1)
-    .catch(err => {
-        this.setState({uploading: false})
-        alert(null,err)
-    });
-    images.push(a.downloadURL)
+    if(this.state.image1 != null){
+      let a = await ToAPI.upLoadPhoto(this.state.image1.path, this.state.categories[this.state.category].category, this.state.name, 1)
+      .catch(err => {
+          this.setState({uploading: false})
+          Alert.alert(null,err)
+      });
+      images.push(a.downloadURL)
+    }
     if(this.state.image2 != null){
       a = await ToAPI.upLoadPhoto(this.state.image2.path, this.state.categories[this.state.category].category, this.state.name, 2)
       .catch(err => {
           this.setState({uploading: false})
-          alert(null,err)
+          Alert.alert(null,err)
       });
       images.push(a.downloadURL)
     }
-    else
-      images.push('')
     if(this.state.image3 != null){
       a = await ToAPI.upLoadPhoto(this.state.image3.path, this.state.categories[this.state.category].category, this.state.name, 3)
       .catch(err => {
           this.setState({uploading: false})
-          alert(null,err)
+          Alert.alert(null,err)
       });
       images.push(a.downloadURL)
     }
-    else
-      images.push('')
     if(this.state.image4 != null){
       a = await ToAPI.upLoadPhoto(this.state.image4.path, this.state.categories[this.state.category].category, this.state.name, 4)
       .catch(err => {
           this.setState({uploading: false})
-          alert(null,err)
+          Alert.alert(null,err)
       });
       images.push(a.downloadURL)
     }
-    else
-      images.push('')
     let payment=[];
     if(this.state.payment == 'Transfer') {
       if(this.state.mastercard)
-        payment.push('Mastercard')
+        payment.push('MasterCard')
       if(this.state.mastercard)
-        payment.push('Paypal')
+        payment.push('PayPal')
       if(this.state.mastercard)
         payment.push('Visa')
     }
     let starttime = new Date()
     let product = {
       name: this.state.name,
-      startingbid: Number(this.state.startingbid.replace(',', "")),
-      bidincrement: Number(this.state.bidincrement.replace(',', "")),
+      startingbid: Number(this.state.startingbid.replace('.', "")),
+      bidincrement: Number(this.state.bidincrement.replace('.', "")),
       condition: this.state.condition,
       endtime: DateTime.convertStringToNumber(this.state.endtime),
       starttime: starttime.getTime(),
       numberofbid: 0,
-      currentbid: Number(this.state.startingbid.replace(',', "")),
+      currentbid: Number(this.state.startingbid.replace('.', "")),
       payment: this.state.payment == 'Transfer' ? payment : this.state.payment,
       description: this.state.description,
       category: this.state.categories[this.state.category].category,
@@ -178,15 +177,16 @@ class PushProduct extends Component {
       shipping: this.state.shipping
     }
     ToAPI.pushProduct(product,this.props.infouser.uid)
-    alert(null,'Upload Successfully')
-    //this.setState({uploading: false})
-    this.initialData()
+    Alert.alert(null,'Upload Successfully')
+    this.setState({uploading: false})
+    this.props.navigation.goBack()
+    //this.initialData()
   }
   checkValid(){
     if(this.state.name === '' || this.state.bidincrement === '' || this.state.startingbid === '')
       return 'Please fill in all the required fields'
-    if(!this.state.image1)
-      return 'The first image is not allowed to be null'
+    if(this.state.image1 != null || this.state.image4 != null ||this.state.image3 != null || this.state.image4 != null)
+      return 'Please input a image of the product'
     return null
   }
 	getPhoto(index) {
@@ -203,7 +203,7 @@ class PushProduct extends Component {
 	    console.log('User tapped custom button: ', response.customButton);
 	  }
 	  else {
-      //alert(JSON.stringify(response))
+      //Alert.alert(JSON.stringify(response))
 			switch (index) {
 				case 1:
 					this.setState({
@@ -229,14 +229,6 @@ class PushProduct extends Component {
 			}
 	  }
 		});
-	}
-	changeToCurrency(money) {
-		let value = money
-		if (value != "") {
-      value = value.replace(/\D/g, "");
-      value = value.replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1" + ',');
-    }
-		return value
 	}
   removeImage(index) {
     switch (index) {

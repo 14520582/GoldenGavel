@@ -74,7 +74,6 @@ class Buy extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Content stickyHeaderIndices={[0]}>
           <View>
             <View style={styles.header}>
               <Icon style={this.props.isEnd ? styles.end : styles.ongoing} name='md-ionic'/>
@@ -88,7 +87,6 @@ class Buy extends Component {
               keyExtractor={(item) => item.key}
               renderItem = {this._renderItem}
             />
-        </Content>
       </Container>
     );
   }

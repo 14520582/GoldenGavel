@@ -243,7 +243,7 @@ class ToAPI {
       });
   }
   static getCategories(callback){
-    firebase.database().ref('Categories').once('value', (snap) => {
+    firebase.database().ref('Categories').on('value', (snap) => {
       let items = [];
       snap.forEach((child) => {
         items.push({

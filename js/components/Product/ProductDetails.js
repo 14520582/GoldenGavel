@@ -150,7 +150,7 @@ class ProductDetails extends Component {
                 <Text style={[styles.textBid, {color: 'black', fontWeight: 'bold', fontSize: 20}]}>{Currency.convertNumberToCurrency(this.props.product.bidincrement) + ' VNĐ'}</Text>
               </View>
               <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
-                <Image source={require('../../assets/gavel.png')} style={{height: 20, width: 20, margin: 5}}/>
+                <Image source={require('../../assets/gavel.png')} style={{height: 18, width: 18, margin: 5}}/>
                 <Text style={[styles.remainTime, {color: '#FF8F00'}]}>{this.props.product.numberofbid + ' bids'}</Text>
               </View>
             </View>
