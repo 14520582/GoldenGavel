@@ -185,7 +185,7 @@ class PushProduct extends Component {
   checkValid(){
     if(this.state.name === '' || this.state.bidincrement === '' || this.state.startingbid === '')
       return 'Please fill in all the required fields'
-    if(this.state.image1 != null || this.state.image4 != null ||this.state.image3 != null || this.state.image4 != null)
+    if(this.state.image1 != null && this.state.image2 != null && this.state.image3 != null && this.state.image4 != null)
       return 'Please input a image of the product'
     return null
   }
