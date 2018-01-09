@@ -29,7 +29,7 @@ class Categories extends Component {
     };
   }
   _BackHandler = () => {
-    this.props.navigation.goBack()
+    this.props.navigation.goBack(null)
     return true;
   }
   componentDidMount (){
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   nameproduct: {
     fontWeight: 'bold',
     color: 'white',
-    fontSize: 18
+    fontSize: 17
   },
   imageCatergories: {
     resizeMode: 'stretch',

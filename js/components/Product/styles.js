@@ -179,7 +179,7 @@ module.exports = StyleSheet.create({
     marginLeft: deviceWidth*2/100,
   },
   date:{
-    fontSize: 16,
+    fontSize: 14,
     fontStyle: 'italic',
   },
   titleSection: {

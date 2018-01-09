@@ -46,7 +46,7 @@ class Profile extends Component {
     }
   }
   _BackHandler = () => {
-    this.props.navigation.goBack()
+    this.props.navigation.goBack(null)
     return true;
   }
   componentDidMount (){
