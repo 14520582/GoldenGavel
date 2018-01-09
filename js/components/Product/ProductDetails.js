@@ -131,7 +131,7 @@ class ProductDetails extends Component {
               </View>
               <View style={[styles.rowInfo, {paddingLeft: 6, alignItems: 'center'}]}>
                 <Icon name ='md-arrow-round-up' style={[styles.up, {fontSize: 20, paddingRight: 5}]}/>
-                <Text style={styles.up}>{(((this.props.product.currentbid*1.0/this.props.product.startingbid) - 1)*100).toFixed(2) + '%'}</Text>
+                <Text style={styles.up}>{(((this.props.product.currentbid*1.0/this.props.product.startingbid) - 1)*100).toFixed(0) + '%'}</Text>
               </View>
             </View>
             <View style={styles.rowHeadDetails}>
@@ -241,7 +241,7 @@ class ProductDetails extends Component {
         <View style={[styles.rowinfobid1, styles.statusHeader]}>
           <Text>{DateTime.convertToStringTime(item.endtime)}</Text>
           <View style={styles.row}>
-            <Icon name='md-arrow-dropup' style={[styles.colortext,{paddingRight: 4}]}/>
+            <Image source={require('../../assets/gavel.png')} style={{margin: 4}}/>
             <Text style={styles.colortext}>{item.numberofbid}</Text>
           </View>
         </View>
